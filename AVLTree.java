@@ -635,5 +635,27 @@ public class AVLTree<E extends Comparable<E>> {
         // TODO inserire i metodi per i quattro tipi di rotazioni
         // sinistra-sinistra, sinistra-destra, destra-destra e destra-sinistra
         // come metodi private con gli opportuni parametri.
+
+        private void leftRotation(AVLTreeNode x)
+        {
+           /* AVLTreeNode y = x.left;
+            x.left = y.right;
+            y.right = x;
+           // x.height = x.left.getMaximum().getHeight() ;
+            x.height = Math.max(x.left.getMaximum().getHeight(), x.right.getMaximum().getHeight()) +1;
+            y.height = Math.max(y.left.getMaximum().getHeight(), x.getMaximum().getHeight()) + 1;
+*/
+            AVLTreeNode rightChild = x.right;
+            x.right = rightChild.left;
+            rightChild.left = x;
+
+            updateHeight();
+
+
+
+
+
+        }
+
     }
 }
