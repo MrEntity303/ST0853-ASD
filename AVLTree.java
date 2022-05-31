@@ -156,8 +156,6 @@ public class AVLTree<E extends Comparable<E>> {
         // AVLTreeNode
         if(el == null)
             throw new NullPointerException();
-        if(el == null)
-            throw new NullPointerException();
 
         return this.getRoot().search(el) != null;
     }
