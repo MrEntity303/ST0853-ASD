@@ -47,7 +47,7 @@ public class AVLTree<E extends Comparable<E>> {
     public AVLTree(E rootElement) {
         if(rootElement == null)
             throw new NullPointerException();
-        root = new AVLTreeNode(rootElement);
+        this.setRoot(new AVLTreeNode(rootElement));
     }
 
     /**
@@ -130,7 +130,15 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public int insert(E el) {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-        return 0;
+        int tmp;
+        if(el == null)
+            throw new NullPointerException();
+        tmp = this.insert(el);
+        this.size = this.getSize() + 1;
+        if (tmp != 0) {
+            this.numberOfNodes = this.getNumberOfNodes() + 1;
+        }
+        return tmp;
     }
 
     /**
@@ -146,7 +154,10 @@ public class AVLTree<E extends Comparable<E>> {
     public boolean contains(E el) {
         // TODO implementare e usare il metodo corrispondente (search) in
         // AVLTreeNode
-        return false;
+        if(el == null)
+            throw new NullPointerException();
+
+        return this.getRoot().search(el) != null;
     }
 
     /**
@@ -609,8 +620,8 @@ public class AVLTree<E extends Comparable<E>> {
         }
 
         /**
-         * Inserisce un elemento nell'albero AVL a partire da questo nodo. Se
-         * l'elemento è già presente ne aumenta semplicemente la molteplicità di
+         * Inserisce un elemento nell'albero AVL a partire da questo nodo.
+         * Se l'elemento è già presente ne aumenta semplicemente la molteplicità di
          * uno. Se l'elemento non è presente aggiunge un nodo nella opportuna
          * posizione e poi procede al ri-bilanciamento dell'albero se
          * l'inserimento del nuovo nodo provoca uno sbilanciamento in almeno un
@@ -623,17 +634,96 @@ public class AVLTree<E extends Comparable<E>> {
          *         effettuati durante l'inserimento.
          */
         public int insert(E el) {
+            int count = 0;
             AVLTreeNode tmp = this.search(el);
             if(tmp != null){
                 tmp.setCount(tmp.getCount() + 1);
                 return 0;
             }
+
+            tmp = this;
+            while(tmp != null) {
+                if(el.compareTo(tmp.getEl()) > 0 )
+                    tmp = tmp.getRight();
+                else
+                    tmp = tmp.getLeft();
+                count++;
+            }
+
+            tmp = new AVLTreeNode(el, tmp.getParent());
+
+            do
+            {
+                tmp = this.rebalance(tmp);
+                tmp = tmp.getParent();
+            }while(tmp.getParent() != null);
+            tmp = this.rebalance(tmp);
+
             //TODO fare inserimento nella posizione corretta ed ri-bilanciare l'albero
-            return 0;
+            return count;
         }
 
         // TODO inserire i metodi per i quattro tipi di rotazioni
         // sinistra-sinistra, sinistra-destra, destra-destra e destra-sinistra
         // come metodi private con gli opportuni parametri.
+        private AVLTreeNode rightRotate(AVLTreeNode x) {
+//            AVLTreeNode tmp =  x.getLeft();
+//            x.setLeft(tmp.getRight());
+//            if(x.getRight() != null)
+//                x.setRight(x.getParent());
+            AVLTreeNode leftChild = x.getLeft();
+
+            x.setLeft(leftChild.getRight());
+            leftChild.setRight(x);
+
+            x.updateHeight();
+            leftChild.updateHeight();
+
+            return leftChild;
+
+        }
+        private AVLTreeNode leftRotate(AVLTreeNode x) {
+//            AVLTreeNode tmp =  x.getLeft();
+//            x.setLeft(tmp.getRight());
+//            if(x.getRight() != null)
+//                x.setRight(x.getParent());
+            AVLTreeNode rightChild = x.getRight();
+
+            x.setRight(rightChild.getLeft());
+            rightChild.setLeft(x);
+
+            x.updateHeight();
+            rightChild.updateHeight();
+
+            return rightChild;
+
+        }
+        private AVLTreeNode rebalance(AVLTreeNode x) {
+            int balanceFactor = x.getBalanceFactor();
+
+            // Left-heavy?
+            if (balanceFactor < -1) {
+                if (x.getLeft().getBalanceFactor() <=0) {    // Case 1
+                    // Rotate right
+                } else {                                // Case 2
+                    // Rotate left-right
+                    x.setLeft(leftRotate(x.getLeft()));
+                }
+                x = rightRotate(x);
+            }
+
+            // Right-heavy?
+            if (balanceFactor > 1) {
+                if (x.getRight().getBalanceFactor() >= 0) {    // Case 3
+                    // Rotate left
+                } else {                                 // Case 4
+                    // Rotate right-left
+                    x.setRight(rightRotate(x.getRight()));
+                }
+                x = leftRotate(x);
+            }
+
+            return x;
+        }
     }
 }
