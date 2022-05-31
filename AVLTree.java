@@ -1,8 +1,11 @@
 package it.unicam.cs.asdl2122.pt1;
 
-import java.util.ArrayDeque;
+
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Queue;
+import java.util.ListIterator;
+
 
 /**
  * Un AVLTree è un albero binario di ricerca che si mantiene sempre bilanciato.
@@ -48,6 +51,7 @@ public class AVLTree<E extends Comparable<E>> {
         if(rootElement == null)
             throw new NullPointerException();
         this.setRoot(new AVLTreeNode(rootElement));
+        this.size = size + 1;
     }
 
     /**
@@ -133,7 +137,7 @@ public class AVLTree<E extends Comparable<E>> {
         int tmp;
         if(el == null)
             throw new NullPointerException();
-        tmp = this.insert(el);
+        tmp = this.getRoot().insert(el);
         this.size = this.getSize() + 1;
         if (tmp != 0) {
             this.numberOfNodes = this.getNumberOfNodes() + 1;
@@ -176,7 +180,10 @@ public class AVLTree<E extends Comparable<E>> {
     public AVLTreeNode getNodeOf(E el) {
         // TODO implementare e usare il metodo corrispondente (search) in
         // AVLTreeNode
-        return null;
+        if(el == null)
+            throw new NullPointerException();
+
+        return this.getRoot().search(el);
     }
 
     /**
@@ -191,7 +198,9 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public int getCount(E el) {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-        return 0;
+        if(el == null)
+            throw new NullPointerException();
+        return this.getRoot().search(el).getCount();
     }
 
     /*
@@ -218,7 +227,22 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public List<E> inOrderVisit() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-        return null;
+
+            if (this.getRoot() == null)
+                return null;
+            List<E> lista = null;
+
+            /* first recur on left child */
+            while(this.getRoot().getLeft().getEl() != null)
+                lista.add(this.getRoot().getLeft().getEl());
+            /* then print the data of node */
+            //System.out.print(node.key + " ");
+            lista.add(this.getRoot().getEl());
+
+            /* now recur on right child */
+            while(this.getRoot().getRight().getEl() != null)
+                lista.add(this.getRoot().getRight().getEl());
+            return lista;
     }
 
     /**
@@ -229,7 +253,7 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public E getMinimum() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-        return null;
+        return this.getRoot().getMinimum().getEl();
     }
 
     /**
@@ -240,7 +264,7 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public E getMaximum() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-        return null;
+        return this.getRoot().getMaximum().getEl();
     }
 
     /**
@@ -262,7 +286,14 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public E getSuccessor(E el) {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-        return null;
+
+        if(el == null)
+            throw new NullPointerException();
+        AVLTreeNode tmp = this.getRoot().search(el);
+        if(tmp == null)
+            throw new IllegalArgumentException();
+
+        return tmp.getSuccessor().getEl();
     }
 
     /**
@@ -284,7 +315,14 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public E getPredecessor(E el) {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-        return null;
+        if(el == null)
+            throw new NullPointerException();
+        AVLTreeNode tmp = this.getRoot().search(el);
+        if(tmp == null)
+            throw new IllegalArgumentException();
+
+        return tmp.getPredecessor().getEl();
+
     }
 
     /**
