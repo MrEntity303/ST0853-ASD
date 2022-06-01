@@ -671,33 +671,76 @@ public class AVLTree<E extends Comparable<E>> {
          *         effettuati durante l'inserimento.
          */
         public int insert(E el) {
-            int count = 0;
             AVLTreeNode tmp = this.search(el);
             if(tmp != null){
                 tmp.setCount(tmp.getCount() + 1);
                 return 0;
             }
-
-            tmp = this;
-            while(tmp != null) {
-                if(el.compareTo(tmp.getEl()) > 0 )
-                    tmp = tmp.getRight();
+            int count = 0;
+            if(this.getEl().compareTo(el) < 0)
+            {
+                if(this.getRight() == null)
+                {
+                    AVLTreeNode newNode = new AVLTreeNode(el);
+                    this.setRight(newNode);
+                    this.getRight().setParent(this);
+                    //this.getRight().setParent(null);
+                    AVLTreeNode x = rebalance(this.getRight());
+                    this.setRight(x);
+                    this.getRight().setParent(null);
+                }
                 else
-                    tmp = tmp.getLeft();
-                count++;
+                {
+                    count = this.getRight().insert(el);
+                }
             }
 
-            tmp = new AVLTreeNode(el, tmp.getParent());
-
-            do
+            if(this.getEl().compareTo(el) > 0)
             {
-                tmp = this.rebalance(tmp);
-                tmp = tmp.getParent();
-            }while(tmp.getParent() != null);
-            tmp = this.rebalance(tmp);
-
-            //TODO fare inserimento nella posizione corretta ed ri-bilanciare l'albero
+                if(this.getLeft() == null)
+                {
+                    AVLTreeNode newNode = new AVLTreeNode(el);
+                    this.setLeft(newNode);
+                    this.getLeft().setParent(this);
+                    //this.getRight().setParent(null);
+                    AVLTreeNode x = rebalance(this.getLeft());
+                    this.setLeft(x);
+                    this.getLeft().setParent(null);
+                }
+            }
+            else
+            {
+                this.getLeft().insert(el);
+            }
+            this.rebalance(this);
             return count;
+
+//            int count = 0;
+//            AVLTreeNode tmp = this.search(el);
+//            if(tmp != null){
+//                tmp.setCount(tmp.getCount() + 1);
+//                return 0;
+//            }
+//
+//            tmp = this;
+//            while(tmp != null) {
+//                if(el.compareTo(tmp.getEl()) > 0 )
+//                    tmp = tmp.getRight();
+//                else
+//                    tmp = tmp.getLeft();
+//                count++;
+//            }
+//
+//            tmp = new AVLTreeNode(el, tmp.getParent());
+//
+//            do
+//            {
+//                tmp = this.rebalance(tmp);
+//                tmp = tmp.getParent();
+//            }while(tmp.getParent() != null);
+//            tmp = this.rebalance(tmp);
+//
+//            return count;
         }
 
         // TODO inserire i metodi per i quattro tipi di rotazioni
