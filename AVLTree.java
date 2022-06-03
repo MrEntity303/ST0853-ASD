@@ -51,6 +51,7 @@ public class AVLTree<E extends Comparable<E>> {
             throw new NullPointerException();
         this.setRoot(new AVLTreeNode(rootElement));
         this.size = size + 1;
+        this.numberOfNodes++;
     }
 
     /**
@@ -138,7 +139,7 @@ public class AVLTree<E extends Comparable<E>> {
             throw new NullPointerException();
         tmp = this.getRoot().insert(el);
         this.size = this.getSize() + 1;
-        if (tmp != 0) {
+        if (tmp < 0) {
             this.numberOfNodes = this.getNumberOfNodes() + 1;
         }
         return tmp;
@@ -671,7 +672,46 @@ public class AVLTree<E extends Comparable<E>> {
          *         effettuati durante l'inserimento.
          */
         public int insert(E el) {
-            AVLTreeNode tmp = this.search(el);
+            int count = 0;
+            AVLTreeNode tmp = this;
+            while(true)
+            {
+                if(el.compareTo(tmp.getEl()) == 0)
+                {
+                    tmp.setCount(tmp.getCount() + 1);
+                    return -1;
+                }
+                else if (el.compareTo(tmp.getEl()) < 0)
+                {
+                    count++;
+                    if(tmp.getLeft() == null)
+                    {
+                        tmp.setLeft(new AVLTreeNode(el, tmp.getParent()));
+                        tmp=tmp.getLeft();
+                        //return count;
+                        break;
+                    }
+
+                    else
+                        tmp = tmp.getLeft();
+                }
+                else if(el.compareTo(tmp.getEl()) > 0)
+                {
+                    count++;
+                    if(tmp.getRight() == null)
+                    {
+                        tmp.setRight(new AVLTreeNode(el, tmp.getParent()));
+                        //return count;
+                        tmp = tmp.getRight();
+                        break;
+                    }
+                    else
+                        tmp = tmp.getRight();
+                }
+            }
+            this.rebalance(tmp);
+            return count;
+            /*AVLTreeNode tmp = this.search(el);
             if(tmp != null){
                 tmp.setCount(tmp.getCount() + 1);
                 return 0;
@@ -707,14 +747,15 @@ public class AVLTree<E extends Comparable<E>> {
                     this.setLeft(x);
                     this.getLeft().setParent(null);
                 }
+                else
+                {
+                    this.getLeft().insert(el);
+                }
             }
-            else
-            {
-                this.getLeft().insert(el);
-            }
+
             this.rebalance(this);
             return count;
-
+*/
 //            int count = 0;
 //            AVLTreeNode tmp = this.search(el);
 //            if(tmp != null){
