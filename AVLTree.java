@@ -2,6 +2,7 @@ package it.unicam.cs.asdl2122.pt1;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -182,8 +183,7 @@ public class AVLTree<E extends Comparable<E>> {
         // AVLTreeNode
         if(el == null)
             throw new NullPointerException();
-
-        return this.getRoot().search(el);
+        return this.getRoot() != null ? this.getRoot().search(el) : null;
     }
 
     /**
@@ -200,7 +200,7 @@ public class AVLTree<E extends Comparable<E>> {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
         if(el == null)
             throw new NullPointerException();
-        return this.getRoot().search(el).getCount();
+        return this.getRoot().search(el) == null ? 0 : this.getRoot().search(el).getCount();
     }
 
     /*
@@ -227,22 +227,25 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public List<E> inOrderVisit() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-
-            if (this.getRoot() == null)
-                return null;
-            List<E> lista = null;
-
-            /* first recur on left child */
-            while(this.getRoot().getLeft().getEl() != null)
-                lista.add(this.getRoot().getLeft().getEl());
-            /* then print the data of node */
-            //System.out.print(node.key + " ");
-            lista.add(this.getRoot().getEl());
-
-            /* now recur on right child */
-            while(this.getRoot().getRight().getEl() != null)
-                lista.add(this.getRoot().getRight().getEl());
-            return lista;
+//
+//        if (this.getRoot() == null)
+//                return null;
+//         List<E> lista = new ArrayList<E>();
+//
+//            /* first recur on left child */
+//            while(this.getRoot().getLeft().getEl() != null)
+//                lista.add(this.getRoot().getLeft().getEl());
+//            /* then print the data of node */
+//            //System.out.print(node.key + " ");
+//            lista.add(this.getRoot().getEl());
+//
+//            /* now recur on right child */
+//            while(this.getRoot().getRight().getEl() != null)
+//                lista.add(this.getRoot().getRight().getEl());
+//         return lista;
+        List<E> array = new ArrayList<>();
+        inOrderTraversal(this.getRoot(), array);
+        return array;
     }
 
     /**
@@ -252,7 +255,6 @@ public class AVLTree<E extends Comparable<E>> {
      *         AVLTree è vuoto.
      */
     public E getMinimum() {
-        // TODO implementare e usare il metodo corrispondente in AVLTreeNode
         return this.getRoot() != null ? this.getRoot().getMinimum().getEl() : null;
     }
 
@@ -263,9 +265,7 @@ public class AVLTree<E extends Comparable<E>> {
      *         AVLTree è vuoto.
      */
     public E getMaximum() {
-        // TODO implementare e usare il metodo corrispondente in AVLTreeNode
         return this.getRoot() != null ? this.getRoot().getMaximum().getEl() : null;
-
     }
 
     /**
@@ -287,14 +287,13 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public E getSuccessor(E el) {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-
         if(el == null)
             throw new NullPointerException();
         AVLTreeNode tmp = this.getRoot().search(el);
         if(tmp == null)
             throw new IllegalArgumentException();
-
         return tmp.getSuccessor().getEl();
+
     }
 
     /**
@@ -324,6 +323,20 @@ public class AVLTree<E extends Comparable<E>> {
 
         return tmp.getPredecessor().getEl();
 
+    }
+
+    /*
+    * metodo inOrderTraversal per implementazione
+    * */
+    private void inOrderTraversal(AVLTreeNode x, List<E> array)
+    {
+        if(x != null)
+        {
+            inOrderTraversal(x.getLeft(), array);
+            for (int i = 0; i < x.getCount(); i++)
+                array.add(x.getEl());
+            inOrderTraversal(x.getRight(), array);
+        }
     }
 
     /**
