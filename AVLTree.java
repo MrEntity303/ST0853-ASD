@@ -253,7 +253,7 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public E getMinimum() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-        return this.getRoot().getMinimum().getEl();
+        return this.getRoot() != null ? this.getRoot().getMinimum().getEl() : null;
     }
 
     /**
@@ -264,7 +264,8 @@ public class AVLTree<E extends Comparable<E>> {
      */
     public E getMaximum() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-        return this.getRoot().getMaximum().getEl();
+        return this.getRoot() != null ? this.getRoot().getMaximum().getEl() : null;
+
     }
 
     /**
