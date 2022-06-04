@@ -91,9 +91,7 @@ public class AVLTree<E extends Comparable<E>> {
      * @return l'altezza di questo AVLTree, -1 se questo AVLTree è vuoto.
      */
     public int getHeight() {
-        if(this.isEmpty())
-            return -1;
-        return (int) (Math.log(2) / Math.log(this.numberOfNodes));
+        return this.getRoot() != null ? this.getRoot().getHeight() : -1;
     }
 
     /**
@@ -509,7 +507,8 @@ public class AVLTree<E extends Comparable<E>> {
          * supponendo che l'altezza dei nodi figli sia già stata aggiornata.
          */
         public void updateHeight() {
-            this.setHeight(Math.max(this.getLeft().getHeight(), this.getRight().getHeight()) + 1);
+            //this.setHeight(Math.max(this.getLeft().getHeight(), this.getRight().getHeight()) + 1);
+            this.setHeight(this.getBalanceFactor());
         }
 
         /**
@@ -754,8 +753,11 @@ public class AVLTree<E extends Comparable<E>> {
                     else
                         tmp = tmp.getRight();
                 }
+
             }
+            this.scanningTree(tmp);
             this.rebalance(tmp);
+
             return count;
             /*AVLTreeNode tmp = this.search(el);
             if(tmp != null){
@@ -863,6 +865,19 @@ public class AVLTree<E extends Comparable<E>> {
             rightChild.updateHeight();
 
             return rightChild;
+
+        }
+
+        private void scanningTree(AVLTreeNode node)
+        {
+            AVLTreeNode tmp = node;
+            while(tmp.getParent() != null)
+            {
+                //tmp.updateHeight();
+                tmp = tmp.getParent();
+                tmp.updateHeight();
+            }
+            //tmp.updateHeight();
 
         }
         private AVLTreeNode rebalance(AVLTreeNode x) {
