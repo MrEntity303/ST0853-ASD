@@ -181,9 +181,10 @@ public class AVLTree<E extends Comparable<E>> {
     public AVLTreeNode getNodeOf(E el) {
         // TODO implementare e usare il metodo corrispondente (search) in
         // AVLTreeNode
+        AVLTreeNode tmp;
         if(el == null)
             throw new NullPointerException();
-        return this.getRoot() != null ? this.getRoot().search(el) : null;
+        return (tmp = this.getRoot().search(el)) != null ? tmp : null;
     }
 
     /**
@@ -676,13 +677,8 @@ public class AVLTree<E extends Comparable<E>> {
          *         found
          */
         public AVLTreeNode search(E el) {
-//            AVLTreeNode tmp = this;
-//            while(tmp != null) {
-//                if (tmp.el == el)
-//                    break;
-//                tmp = el.compareTo(tmp.el) < 0 ? tmp.left : tmp.right;
-//            }
-//            return tmp;
+
+
             AVLTreeNode tmp = this;
             while(tmp != null){
                 if(tmp.getEl() == el)
@@ -721,7 +717,7 @@ public class AVLTree<E extends Comparable<E>> {
                     count++;
                     if(tmp.getLeft() == null)
                     {
-                        tmp.setLeft(new AVLTreeNode(el, tmp.getParent()));
+                        tmp.setLeft(new AVLTreeNode(el, tmp));
                         tmp=tmp.getLeft();
                         //return count;
                         break;
@@ -735,7 +731,7 @@ public class AVLTree<E extends Comparable<E>> {
                     count++;
                     if(tmp.getRight() == null)
                     {
-                        tmp.setRight(new AVLTreeNode(el, tmp.getParent()));
+                        tmp.setRight(new AVLTreeNode(el, tmp));
                         //return count;
                         tmp = tmp.getRight();
                         break;
