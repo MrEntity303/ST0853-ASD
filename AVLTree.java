@@ -414,16 +414,16 @@ public class AVLTree<E extends Comparable<E>> {
              * finché il parent non è diverso da null OPPURE il nodo non è più figlio sinistro
              */
 
-            AVLTreeNode p = this.getParent();
-            AVLTreeNode t = this;
-            while (p != null && t == p.getLeft()) {
-                t = p;
-                p = t.getParent();
+            AVLTreeNode parent = this.getParent();
+            AVLTreeNode node = this;
+            while (parent != null && node == parent.getLeft()) {
+                node = parent;
+                parent = node.getParent();
             }
 
             //Se il parent è diverso da null allora lo ritorno altrimenti non esiste un predecessore
 
-            return p;
+            return parent;
         }
 
         /**
@@ -434,12 +434,27 @@ public class AVLTree<E extends Comparable<E>> {
          * @return il nodo successore
          */
         public AVLTreeNode getSuccessor() {
-            if(this.getRight() != null)
-                return this.getMinimum();
-            AVLTreeNode tmp = this;
-            while(tmp.getParent() != null && tmp == tmp.getParent().getRight())
-                tmp = tmp.getParent();
-            return tmp.getParent();
+            //Se esiste un figlio destro allora prendo il minimo di quel figlio
+            if (this.getRight() != null) {
+                return this.getRight().getMinimum();
+            }
+            /*
+             * Prendo il parent di un nodo e il nodo stesso e li metto in una variabile. Tramite una ricerca ricorsiva salgo l'albero
+             * finché il parent non è diverso da null OPPURE il nodo non è più figlio destro
+             */
+            AVLTreeNode parent = this.getParent();
+            AVLTreeNode node = this;
+
+            while (parent != null && node == parent.getRight()) {
+                node = parent;
+                parent = node.getParent();
+            }
+            //Se il parent è diverso da null allora lo ritorno altrimenti non esiste un predecessore
+            if (parent != null) {
+                return parent;
+            }
+
+            return null;
         }
 
         /**
