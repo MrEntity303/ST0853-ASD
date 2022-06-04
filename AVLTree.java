@@ -137,9 +137,11 @@ public class AVLTree<E extends Comparable<E>> {
         int tmp;
         if(el == null)
             throw new NullPointerException();
-        tmp = this.getRoot().insert(el);
-        this.size = this.getSize() + 1;
-        if (tmp < 0) {
+        if((tmp = this.getRoot().insert(el)) == -1) {
+            this.size = this.getSize() + 1;
+        }
+        else {
+            this.size = this.getSize() + 1;
             this.numberOfNodes = this.getNumberOfNodes() + 1;
         }
         return tmp;
@@ -156,7 +158,6 @@ public class AVLTree<E extends Comparable<E>> {
      *                                  se l'elemento {@code el} è null
      */
     public boolean contains(E el) {
-        // TODO implementare e usare il metodo corrispondente (search) in
         // AVLTreeNode
         if(el == null)
             throw new NullPointerException();
@@ -403,21 +404,25 @@ public class AVLTree<E extends Comparable<E>> {
          * @return il nodo predecessore
          */
         public AVLTreeNode getPredecessor(){
-            if(root.getMinimum() == this)
-                return null;
-            AVLTreeNode x, y;
-            x = this;
-            if(x.getLeft() != null)
-                return x.getLeft().getMaximum();
-
-            y = x.getParent();
-            //AVLTreeNode tmp = this.getParent();
-
-            while(y != null && x == y.getLeft()) {
-                x = y;
-                y = y.getParent();
+            //Se esiste un figlio sinistro allora prendo il massimo di quel figlio
+            if (this.getLeft() != null) {
+                return this.getLeft().getMaximum();
             }
-            return y;
+            /*
+             * Prendo il parent di un nodo e il nodo stesso e li metto in una variabile. Tramite una ricerca ricorsiva salgo l'albero
+             * finché il parent non è diverso da null OPPURE il nodo non è più figlio sinistro
+             */
+
+            AVLTreeNode p = this.getParent();
+            AVLTreeNode t = this;
+            while (p != null && t == p.getLeft()) {
+                t = p;
+                p = t.getParent();
+            }
+
+            //Se il parent è diverso da null allora lo ritorno altrimenti non esiste un predecessore
+
+            return p;
         }
 
         /**
@@ -523,23 +528,33 @@ public class AVLTree<E extends Comparable<E>> {
          *         bilanciati, false altrimenti.
          */
         public boolean isBalanced() {
-            if(!(this.getBalanceFactor() >= -1 && this.getBalanceFactor() <= 1))
-                return false;
-            if(this.getRight() != null){
-                if(!(this.getRight().getBalanceFactor() >= -1 && this.getRight().getBalanceFactor() <= 1)){
-                    return false;
+            int fattoreBilanciamento = this.getBalanceFactor();
+            //Se il fattore di bilanciamento è compreso tra -1 e 1 allora facciamo i vari check,
+            //sennò è inutile andare a vedere i figli se questo nodo è già sbilanciato
+            //quindi in caso negativo ritorniamo false direttamente
+            //Da notare che si effettuano chiamate ricorsive al metodo isBalanced nei figli
+            if (fattoreBilanciamento >= -1 && fattoreBilanciamento <= 1) {
+                AVLTreeNode left = this.getLeft();
+                AVLTreeNode right = this.getRight();
+                //Se esiste il figlio sinistro ma non il destro allora controlliamo se il figlio sinistro è bilanciato
+                //Se esiste il figlio sinistro ma anc
+                if (left != null) {
+                    if (right == null) {
+                        return left.isBalanced();
+                    } else {
+                        return left.isBalanced() && right.isBalanced();
+                    }
                 }
-                if(!this.getRight().isLeaf())
-                    this.isBalanced();
-            }
-            if(this.getLeft() != null) {
-                if(!(this.getLeft().getBalanceFactor() >= -1 && this.getLeft().getBalanceFactor() <= 1)){
-                    return false;
+                //Se esiste il figlio destro ma non il sinistro allora controlliamo se il figlio destro è bilanciato
+                if (right != null) {
+                    return right.isBalanced();
                 }
-                if(!this.getLeft().isLeaf())
-                    this.isBalanced();
+
+                //Se il nodo non ha figli allora ritorniamo che il nodo è bilanciato;
+                return true;
+
             }
-            return true;
+            return false;
 
 
     }
