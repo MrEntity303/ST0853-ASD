@@ -134,7 +134,6 @@ public class AVLTree<E extends Comparable<E>> {
      *                                  se l'elemento {@code el} è null
      */
     public int insert(E el) {
-        // TODO implementare e usare il metodo corrispondente in AVLTreeNode
         int tmp;
         if(el == null)
             throw new NullPointerException();
@@ -286,13 +285,12 @@ public class AVLTree<E extends Comparable<E>> {
      *                                      presente in questo AVLTree.
      */
     public E getSuccessor(E el) {
-        // TODO implementare e usare il metodo corrispondente in AVLTreeNode
         if(el == null)
             throw new NullPointerException();
         AVLTreeNode tmp = this.getRoot().search(el);
         if(tmp == null)
             throw new IllegalArgumentException();
-        return tmp.getSuccessor().getEl();
+        return (tmp = tmp.getSuccessor()) == null ? null : tmp.getEl();
 
     }
 
@@ -314,14 +312,13 @@ public class AVLTree<E extends Comparable<E>> {
      *                                      presente in questo AVLTree.
      */
     public E getPredecessor(E el) {
-        // TODO implementare e usare il metodo corrispondente in AVLTreeNode
         if(el == null)
             throw new NullPointerException();
         AVLTreeNode tmp = this.getRoot().search(el);
         if(tmp == null)
             throw new IllegalArgumentException();
 
-        return tmp.getPredecessor().getEl();
+        return (tmp = tmp.getPredecessor()) == null? null : tmp.getEl() ;
 
     }
 
@@ -406,12 +403,21 @@ public class AVLTree<E extends Comparable<E>> {
          * @return il nodo predecessore
          */
         public AVLTreeNode getPredecessor(){
-            if(this.getLeft() != null)
-                return this.getMaximum();
-            AVLTreeNode tmp = this;
-            while(tmp.getParent() != null && tmp == tmp.getParent().getLeft())
-                tmp = tmp.getParent();
-            return tmp.getParent();
+            if(root.getMinimum() == this)
+                return null;
+            AVLTreeNode x, y;
+            x = this;
+            if(x.getLeft() != null)
+                return x.getLeft().getMaximum();
+
+            y = x.getParent();
+            //AVLTreeNode tmp = this.getParent();
+
+            while(y != null && x == y.getLeft()) {
+                x = y;
+                y = y.getParent();
+            }
+            return y;
         }
 
         /**
