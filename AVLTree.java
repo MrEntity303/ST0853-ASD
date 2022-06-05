@@ -508,7 +508,19 @@ public class AVLTree<E extends Comparable<E>> {
          */
         public void updateHeight() {
             //this.setHeight(Math.max(this.getLeft().getHeight(), this.getRight().getHeight()) + 1);
-            this.setHeight(this.getBalanceFactor());
+            //Se esiste il figlio sinistro ma non il destro allora l'altezza è filgio sinistro + 1
+            if (this.getLeft() != null && this.getRight() == null) {
+                this.setHeight(this.getLeft().getHeight() + 1);
+                //Se esiste figlio destro ma non il sinistro allora l'altezza è figlio destro + 1
+            } else if (this.getLeft() == null && this.getRight() != null) {
+                this.height = this.getRight().getHeight() + 1;
+                //Se esistono entrambi i figli allora l'altezza è il massimo delle due + 1. Utilizzo la funzione Math.max per prendere il massimo
+            } else if (this.getLeft() != null && this.getRight() != null) {
+                this.height = Math.max(this.getLeft().getHeight(), this.getRight().getHeight()) + 1;
+            } else {
+                //Se è una foglia allora altezza 0. Questo else è utile quando si ricalcolano le altezze dopo le rotazioni
+                this.height = 0;
+            }
         }
 
         /**
@@ -524,15 +536,20 @@ public class AVLTree<E extends Comparable<E>> {
          * @return il fattore di bilanciamento di questo nodo.
          */
         public int getBalanceFactor() {
-            //AVLTreeNode tmp = this;
-            //if(this.left == null && this.right == null)
-            if (this.getLeft() != null && this.getRight() == null)
+            //Se il nodo è foglia fattore 0
+            if (this.isLeaf()) {
+                return 0;
+            }
+            //Se esiste figlio sinistro ma non destro allora il fattore è altezza figlio sinistro +1
+            if (this.getLeft() != null && this.getRight() == null) {
                 return this.getLeft().getHeight() + 1;
-            if (this.getLeft() == null && this.getRight() != null)
+            }
+            //Se esiste figlio destro ma non sisnistro allora il fattore è l'altezza del figlio sinistro moltiplicato per -1 e poi sommato 1
+            if (this.getRight() != null && this.getLeft() == null) {
                 return (this.getRight().getHeight() + 1) * -1;
-            if (this.getLeft() != null && this.getRight() != null)
-                return this.getLeft().getHeight() - this.getRight().getHeight();
-            return 0;
+            }
+            //Se esistono entrambi i figli allroa è l'altezza figlio sinistro - altezza figlio destro
+            return this.getLeft().getHeight() - this.getRight().getHeight();
         }
 
         /**
