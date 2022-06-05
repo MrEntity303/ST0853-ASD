@@ -518,4 +518,18 @@ public class AVLTreeTest {
         assertEquals(null, t.getPredecessor(10));
     }
 
+    @Test
+    public final void testUpdateHeight(){
+        AVLTree<Integer> t = new AVLTree<Integer>(40);
+        t.insert(20);
+        t.insert(60);
+        assertEquals(0, t.getRoot().getHeight());
+        t = new AVLTree<Integer>(40);
+        t.insert(60);
+        assertEquals(-1, t.getRoot().getHeight());
+        t = new AVLTree<Integer>(40);
+        t.insert(20);
+        assertEquals(1, t.getRoot().getHeight());
+    }
+
 }
