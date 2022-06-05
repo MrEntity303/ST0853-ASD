@@ -507,19 +507,18 @@ public class AVLTree<E extends Comparable<E>> {
          * supponendo che l'altezza dei nodi figli sia già stata aggiornata.
          */
         public void updateHeight() {
-            //this.setHeight(Math.max(this.getLeft().getHeight(), this.getRight().getHeight()) + 1);
             //Se esiste il figlio sinistro ma non il destro allora l'altezza è filgio sinistro + 1
             if (this.getLeft() != null && this.getRight() == null) {
                 this.setHeight(this.getLeft().getHeight() + 1);
                 //Se esiste figlio destro ma non il sinistro allora l'altezza è figlio destro + 1
             } else if (this.getLeft() == null && this.getRight() != null) {
-                this.height = this.getRight().getHeight() + 1;
+                this.setHeight(this.getRight().getHeight() + 1);
                 //Se esistono entrambi i figli allora l'altezza è il massimo delle due + 1. Utilizzo la funzione Math.max per prendere il massimo
             } else if (this.getLeft() != null && this.getRight() != null) {
-                this.height = Math.max(this.getLeft().getHeight(), this.getRight().getHeight()) + 1;
+                this.setHeight(Math.max(this.getLeft().getHeight(), this.getRight().getHeight()) + 1);
             } else {
                 //Se è una foglia allora altezza 0. Questo else è utile quando si ricalcolano le altezze dopo le rotazioni
-                this.height = 0;
+                this.setHeight(0);
             }
         }
 
@@ -584,11 +583,8 @@ public class AVLTree<E extends Comparable<E>> {
 
                 //Se il nodo non ha figli allora ritorniamo che il nodo è bilanciato;
                 return true;
-
             }
             return false;
-
-
     }
 
         /**
@@ -770,11 +766,9 @@ public class AVLTree<E extends Comparable<E>> {
                     else
                         tmp = tmp.getRight();
                 }
-
             }
             this.scanningTree(tmp);
             this.rebalance(tmp);
-
             return count;
             /*AVLTreeNode tmp = this.search(el);
             if(tmp != null){
