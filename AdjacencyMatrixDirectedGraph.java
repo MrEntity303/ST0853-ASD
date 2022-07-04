@@ -17,7 +17,7 @@ import java.util.Set;
  * sono accettate etichette dei nodi null e non sono accettate etichette
  * duplicate nei nodi (che in quel caso sono lo stesso nodo).
  * 
- * I nodi sono indicizzati da 0 a nodeCoount() - 1 seguendo l'ordine del loro
+ * I nodi sono indicizzati da 0 a nodeCount() - 1 seguendo l'ordine del loro
  * inserimento (0 è l'indice del primo nodo inserito, 1 del secondo e così via)
  * e quindi in ogni istante la matrice di adiacenza ha dimensione nodeCount() *
  * nodeCount(). La matrice, sempre quadrata, deve quindi aumentare di dimensione
@@ -72,25 +72,25 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public int nodeCount() {
-        // TODO implementare
-        return -1;
+        return this.nodesIndex.keySet().size();
     }
 
     @Override
     public int edgeCount() {
-        // TODO implementare
-        return -1;
+        return this.getEdges().size();
     }
 
     @Override
     public void clear() {
-        // TODO implementare
+        //this.matrix = new ArrayList<ArrayList<GraphEdge<L>>>();
+        //this.nodesIndex = new HashMap<GraphNode<L>, Integer>();
+        this.matrix.clear();
+        this.nodesIndex.clear();
     }
 
     @Override
     public boolean isDirected() {
-        // TODO implementare
-        return false;
+        return true;
     }
 
     /*
@@ -100,7 +100,20 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     @Override
     public boolean addNode(GraphNode<L> node) {
         // TODO implementare
-        return false;
+        if(node == null)
+            throw new NullPointerException("Impossibile aggiungere un nodo nullo.");
+        //se il nodo è già presente ritorno false
+        if(this.nodesIndex.containsKey(node))
+            return false;
+        //inserisco null fino a che non devo inserire un elemento
+        for (int i = 0; i < nodesIndex.size(); i++)
+        {
+            this.nodesIndex.put(node, null);
+        }
+
+        //se la chiave non corrisponde a nessun valore, o è null, viene associata
+        //a un valore specifico e restituisce null, altrimenti restituisce il valore corrente
+        return this.nodesIndex.putIfAbsent(node, this.nodeCount()) != null;
     }
 
     /*
