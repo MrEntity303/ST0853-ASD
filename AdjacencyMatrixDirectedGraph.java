@@ -123,7 +123,11 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     @Override
     public boolean addNode(L label) {
         // TODO implementare
-        return false;
+        GraphNode<L> newNode = new GraphNode<>(label);
+        if(this.nodesIndex.containsKey(newNode))
+            return false;
+        this.nodesIndex.put(newNode,this.nodeCount());
+        return true;
     }
 
     /*
@@ -134,6 +138,12 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     @Override
     public void removeNode(GraphNode<L> node) {
         // TODO implementare
+//        if(!(this.nodesIndex.containsKey(node)))
+//            throw new IllegalArgumentException();
+//        if(node == null)
+//            throw new NullPointerException();
+//        throw new UnsupportedOperationException();
+
     }
 
     /*
@@ -144,6 +154,13 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     @Override
     public void removeNode(L label) {
         // TODO implementare
+        if(label == null)
+            throw new NullPointerException();
+        //creo un nodo e gli assegno la label tramite getNode()
+        GraphNode<L> newNode = getNode(label);
+        if(this.nodesIndex.containsKey(newNode))
+            removeNode(label);
+        throw new IllegalArgumentException("Etichetta inesistente");
     }
 
     /*
