@@ -3,10 +3,7 @@
  */
 package it.unicam.cs.asdl2122.pt1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 // TODO completare gli import necessari
 
@@ -55,9 +52,9 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     protected Map<GraphNode<L>, Integer> nodesIndex;
 
     /*
-     * Matrice di adiacenza, gli elementi sono null o oggetti della classe
+     * Matrice di adiacenza, gli elementi sono null od oggetti della classe
      * GraphEdge<L>. L'uso di ArrayList permette alla matrice di aumentare di
-     * dimensione gradualmente ad ogni inserimento di un nuovo nodo e di
+     * dimensione gradualmente a ogni inserimento di un nuovo nodo e di
      * ridimensionarsi se un nodo viene cancellato.
      */
     protected ArrayList<ArrayList<GraphEdge<L>>> matrix;
@@ -66,8 +63,8 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
      * Crea un grafo vuoto.
      */
     public AdjacencyMatrixDirectedGraph() {
-        this.matrix = new ArrayList<ArrayList<GraphEdge<L>>>();
-        this.nodesIndex = new HashMap<GraphNode<L>, Integer>();
+        this.matrix = new ArrayList<>();
+        this.nodesIndex = new HashMap<>();
     }
 
     @Override
@@ -82,8 +79,6 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public void clear() {
-        //this.matrix = new ArrayList<ArrayList<GraphEdge<L>>>();
-        //this.nodesIndex = new HashMap<GraphNode<L>, Integer>();
         this.matrix.clear();
         this.nodesIndex.clear();
     }
@@ -99,31 +94,32 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
      */
     @Override
     public boolean addNode(GraphNode<L> node) {
-        // TODO implementare
         if(node == null)
             throw new NullPointerException("Impossibile aggiungere un nodo nullo.");
+
         //se il nodo è già presente ritorno false
         if(this.nodesIndex.containsKey(node))
             return false;
-        //inserisco null fino a che non devo inserire un elemento
-        for (int i = 0; i < nodesIndex.size(); i++)
-        {
-            this.nodesIndex.put(node, null);
-        }
 
         //se la chiave non corrisponde a nessun valore, o è null, viene associata
         //a un valore specifico e restituisce null, altrimenti restituisce il valore corrente
-        return this.nodesIndex.putIfAbsent(node, this.nodeCount()) != null;
+        this.nodesIndex.putIfAbsent(node, this.nodeCount());
+
+        // toInsert sara' il nuovo array list di un nodo
+        //ogni arrayList di un nodo conterra' solo i nodi a cui e' collegato
+        ArrayList<GraphEdge<L>> toInsert = new ArrayList<>();
+        matrix.add(toInsert);
+
+        return true;
     }
 
     /*
-     * Gli indici dei nodi vanno assegnati nell'ordine di inserimento a partire
+     * Gli indici dei nodi vanno assegnati nell'ordine d'inserimento a partire
      * da zero
      */
     @Override
     public boolean addNode(L label) {
-        // TODO implementare
-        return false;
+        return this.addNode(new GraphNode<>(label) );
     }
 
     /*
@@ -133,7 +129,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
      */
     @Override
     public void removeNode(GraphNode<L> node) {
-        // TODO implementare
+        // TODO implementare cancellazione dell'arco precedente
     }
 
     /*
@@ -158,81 +154,124 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public GraphNode<L> getNode(GraphNode<L> node) {
-        // TODO implementare
+        if (node == null)
+            throw new NullPointerException("Nodo nullo.");
+        //confronta tutti i nodi esistenti in indexNode
+        for (GraphNode<L> element : nodesIndex.keySet()) {
+            if (element.equals(node)) {
+                return element;
+            }
+        }
         return null;
     }
 
     @Override
     public GraphNode<L> getNode(L label) {
-        // TODO implementare
-        return null;
+        return getNode(new GraphNode<>(label));
     }
 
     @Override
     public GraphNode<L> getNode(int i) {
-        // TODO implementare
+        if (i < 0 || i > nodeCount()-1)
+            throw new IndexOutOfBoundsException("Fuori dai limiti dell'intervallo");
+
+        //creo un iteratore per poter scorrere intera mappa ed estrarre il nodo tramite indice d'inserimento
+        Iterator<Map.Entry<GraphNode<L>, Integer>> it = nodesIndex.entrySet().iterator();
+        //variabile di appoggio per il valore del iterator
+        Map.Entry<GraphNode<L>, Integer> app;
+        while(it.hasNext())
+        {
+            app = it.next();
+            if(app.getValue() == i)
+                return app.getKey();
+        }
         return null;
     }
 
     @Override
     public int getNodeIndexOf(GraphNode<L> node) {
-        // TODO implementare
+        if(node == null)
+            throw new NullPointerException("Nodo nullo");
+
+        if(this.getNode(node) == null)
+            throw new IllegalArgumentException("Il nodo passato non esiste in questo grafo");
+        //creo un iteratore per poter scorrere intera mappa ed estrarre il nodo tramite indice d'inserimento
+        Iterator<Map.Entry<GraphNode<L>, Integer>> it = nodesIndex.entrySet().iterator();
+        //variabile di appoggio per il valore del iterator
+        Map.Entry<GraphNode<L>, Integer> app;
+        while(it.hasNext())
+        {
+            app = it.next();
+            if(app.getKey().equals(node))
+                return app.getValue();
+        }
         return -1;
     }
 
     @Override
     public int getNodeIndexOf(L label) {
-        // TODO implementare
-        return -1;
+        return this.getNodeIndexOf(new GraphNode<>(label));
     }
 
     @Override
     public Set<GraphNode<L>> getNodes() {
-        // TODO implementare
-        return null;
+        return nodesIndex.keySet();
     }
 
     @Override
     public boolean addEdge(GraphEdge<L> edge) {
-        // TODO implementare
-        return false;
+        if(edge == null)
+            throw new NullPointerException("L'arco passato è nullo");
+
+        if(!(nodesIndex.containsKey(edge.getNode1()) && nodesIndex.containsKey(edge.getNode2())))
+            throw new IllegalArgumentException("Uno dei due nodi specificati nell'arco non esiste");
+
+        if(!edge.isDirected())
+            throw new IllegalArgumentException("Questo arco e' non orientato");
+
+        //scorro tramite foreach tutti gli array list dentro a matrix
+        for(ArrayList<GraphEdge<L>> graphEdges : matrix) {
+            for (GraphEdge<L> edgeApp : graphEdges)
+            {
+                if(edge.equals(edgeApp))
+                    return false;
+            }
+        }
+
+        matrix.get(this.getNodeIndexOf(edge.getNode1())).add(edge);
+        edge.getNode2().setPrevious(edge.getNode1());
+        return true;
     }
 
     @Override
     public boolean addEdge(GraphNode<L> node1, GraphNode<L> node2) {
-        // TODO implementare
-        return false;
+        return this.addEdge(new GraphEdge<>(node1, node2, true));
     }
 
     @Override
     public boolean addWeightedEdge(GraphNode<L> node1, GraphNode<L> node2,
             double weight) {
-        // TODO implementare
-        return false;
+        return this.addEdge(new GraphEdge<>(this.getNode(node1), this.getNode(node2),true, weight));
     }
 
     @Override
     public boolean addEdge(L label1, L label2) {
-        // TODO implementare
-        return false;
+        return this.addEdge(new GraphEdge<>(this.getNode(label1), this.getNode(label2), true));
     }
 
     @Override
     public boolean addWeightedEdge(L label1, L label2, double weight) {
-        // TODO implementare
-        return false;
+        return this.addEdge(new GraphEdge<>(this.getNode(label1), this.getNode(label2), true, weight));
     }
 
     @Override
     public boolean addEdge(int i, int j) {
-        // TODO implementare
-        return false;
+        return addEdge(new GraphEdge<>(this.getNode(i), this.getNode(j), true));
     }
 
     @Override
     public boolean addWeightedEdge(int i, int j, double weight) {
-        // TODO implementare
-        return false;
+        return addEdge(new GraphEdge<>(this.getNode(i), this.getNode(j), true, weight));
     }
 
     @Override
@@ -257,32 +296,54 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public GraphEdge<L> getEdge(GraphEdge<L> edge) {
-        // TODO implementare
+        if(edge == null)
+            throw new NullPointerException("Arco passato e' nullo");
+
+        if(this.getNode(edge.getNode1()) == null || this.getNode(edge.getNode2()) == null)
+            throw new IllegalArgumentException("Uno dei 2 nodi dell'arco non esiste");
+        //scorro tramite foreach tutti gli array list dentro a matrix
+        for(ArrayList<GraphEdge<L>> graphEdges : matrix) {
+            for (GraphEdge<L> edgeApp : graphEdges)
+            {
+                if(edge.equals(edgeApp))
+                    return edgeApp;
+            }
+        }
         return null;
     }
 
     @Override
     public GraphEdge<L> getEdge(GraphNode<L> node1, GraphNode<L> node2) {
-        // TODO implementare
-        return null;
+        return this.getEdge(new GraphEdge<>(node1, node2, true));
     }
 
     @Override
     public GraphEdge<L> getEdge(L label1, L label2) {
-        // TODO implementare
-        return null;
+        return this.getEdge(new GraphEdge<>(this.getNode(label1), this.getNode(label2), true));
     }
 
     @Override
     public GraphEdge<L> getEdge(int i, int j) {
-        // TODO implementare
-        return null;
+        return this.getEdge(new GraphEdge<>(this.getNode(i), this.getNode(j), true));
     }
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(GraphNode<L> node) {
-        // TODO implementare
-        return null;
+        if(node == null)
+            throw new NullPointerException("Nodo passato e' nullo");
+
+        if(this.nodesIndex.containsKey(node))
+            throw new IllegalArgumentException("Il nodo passato non esiste");
+        //mi creo un set per conservare piu di un nodo adiacente, per comodita' nei test il
+        //prof ha consigliato di usare una HashSet
+        Set<GraphNode<L>> adjacent = new HashSet<>();
+        //scorro tramite foreach tutti gli array list dentro a matrix
+        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
+            for(GraphEdge<L> edge : edges) {
+                if(edge.getNode1().equals(node)) adjacent.add(edge.getNode2());
+            }
+        }
+        return adjacent;
     }
 
     @Override
