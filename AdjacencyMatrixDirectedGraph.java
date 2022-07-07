@@ -3,12 +3,7 @@
  */
 package it.unicam.cs.asdl2122.pt1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.HashSet;
+import java.util.*;
 // TODO completare gli import necessari
 
 // ATTENZIONE: è vietato includere import a pacchetti che non siano della Java SE
@@ -343,7 +338,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         if(node == null)
             throw new NullPointerException("Nodo passato e' nullo");
 
-        if(this.nodesIndex.containsKey(node))
+        if(!this.nodesIndex.containsKey(node))
             throw new IllegalArgumentException("Il nodo passato non esiste");
         //mi creo un set per conservare piu di un nodo adiacente, per comodita' nei test il
         //prof ha consigliato di usare una HashSet
