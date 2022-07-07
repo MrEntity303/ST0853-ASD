@@ -45,7 +45,17 @@ public class BellmanFordShortestPathComputer<L>
      *                                      peso è {@code Double.NaN}.
      */
     public BellmanFordShortestPathComputer(Graph<L> graph) {
-        // TODO implementare
+        if(graph == null)
+            throw new NullPointerException();
+        if(graph.isEmpty())
+            throw new IllegalArgumentException();
+        if(!graph.isDirected())
+            throw new IllegalArgumentException();
+        for (GraphEdge<L> newEdge : graph.getEdges()) {
+            if(newEdge.hasWeight())
+                throw new IllegalArgumentException();
+        }
+        this.graph = graph;
     }
 
     @Override
