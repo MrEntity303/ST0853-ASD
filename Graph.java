@@ -846,7 +846,7 @@ public abstract class Graph<L> {
      * 
      * Questa operazione è opzionale.
      * 
-     * @param label
+     * @param i
      *                  l'indice del nodo di cui sono richiesti gli archi
      *                  connessi
      * 

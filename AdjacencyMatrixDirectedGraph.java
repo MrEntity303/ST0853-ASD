@@ -3,10 +3,17 @@
  */
 package it.unicam.cs.asdl2122.pt1;
 
-import java.util.*;
+
 // TODO completare gli import necessari
 
 // ATTENZIONE: è vietato includere import a pacchetti che non siano della Java SE
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.HashSet;
 
 /**
  * Classe che implementa un grafo orientato tramite matrice di adiacenza. Non
@@ -128,7 +135,42 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
      */
     @Override
     public void removeNode(GraphNode<L> node) {
-        // TODO implementare cancellazione dell'arco precedente
+
+        if(node == null)
+            throw new NullPointerException("Nodo passato e' nullo");
+
+        if(!nodesIndex.containsKey(node))
+            throw new IllegalArgumentException("Il nodo onon esiste in questo grafo");
+
+        int indexApp= -1;
+
+        Iterator<Map.Entry<GraphNode<L>, Integer>> it = nodesIndex.entrySet().iterator();
+        //variabile di appoggio per il valore del iterator
+        Map.Entry<GraphNode<L>, Integer> app;
+        while(it.hasNext())
+        {
+            app = it.next();
+            if(app.getKey().equals(node)) {
+                //indexApp = app.getValue();
+                matrix.remove((int) app.getValue());
+                //nodesIndex.remove(node);
+            }
+            //if(indexApp > app.getValue()) app.setValue(app.getValue() - 1);
+        }
+
+        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
+            for(GraphEdge<L> edge : edges) {
+                if(edge.getNode2().equals(node)) edges.remove(edge);
+            }
+        }
+        nodesIndex.remove(node);
+        int index = 0;
+        while(it.hasNext())
+        {
+            it.next().setValue(index);
+            index++;
+        }
+
     }
 
     /*
@@ -138,14 +180,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
      */
     @Override
     public void removeNode(L label) {
-        // TODO implementare
-        if(label == null)
-            throw new NullPointerException();
-        //creo un nodo e gli assegno la label tramite getNode()
-        GraphNode<L> newNode = getNode(label);
-        if(this.nodesIndex.containsKey(newNode))
-            removeNode(label);
-        throw new IllegalArgumentException("Etichetta inesistente");
+        this.removeNode(this.getNode(label));
     }
 
     /*
@@ -155,7 +190,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
      */
     @Override
     public void removeNode(int i) {
-        // TODO implementare
+        this.removeNode(this.getNode(i));
     }
 
     @Override
@@ -196,11 +231,13 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public int getNodeIndexOf(GraphNode<L> node) {
+
         if(node == null)
             throw new NullPointerException("Nodo nullo");
 
-        if(this.getNode(node) == null)
+        if(!this.nodesIndex.containsKey(node))
             throw new IllegalArgumentException("Il nodo passato non esiste in questo grafo");
+
         //creo un iteratore per poter scorrere intera mappa ed estrarre il nodo tramite indice d'inserimento
         Iterator<Map.Entry<GraphNode<L>, Integer>> it = nodesIndex.entrySet().iterator();
         //variabile di appoggio per il valore del iterator
@@ -282,22 +319,31 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public void removeEdge(GraphEdge<L> edge) {
-        // TODO implementare
+        if(edge == null)
+            throw new NullPointerException("L'arco e' nullo");
+        if(edge.getNode2() == null || edge.getNode1() == null)
+            throw new IllegalArgumentException("Un nodo e' nullo");
+
+        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
+            for(GraphEdge<L> edgeApp : edges) {
+                if(edgeApp.equals(edge)) edges.remove(edge);
+            }
+        }
     }
 
     @Override
     public void removeEdge(GraphNode<L> node1, GraphNode<L> node2) {
-        // TODO implementare
+        this.removeEdge(this.getEdge(this.getNode(node1), this.getNode(node2)));
     }
 
     @Override
     public void removeEdge(L label1, L label2) {
-        // TODO implementare
+        this.removeEdge(this.getEdge(this.getNode(label1), this.getNode(label2)));
     }
 
     @Override
     public void removeEdge(int i, int j) {
-        // TODO implementare
+        this.removeEdge(this.getEdge(this.getNode(i), this.getNode(j)));
     }
 
     @Override
@@ -320,7 +366,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public GraphEdge<L> getEdge(GraphNode<L> node1, GraphNode<L> node2) {
-        return this.getEdge(new GraphEdge<>(node1, node2, true));
+        return this.getEdge(new GraphEdge<>(this.getNode(node1), this.getNode(node2), true));
     }
 
     @Override
@@ -354,73 +400,97 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(L label) {
-        // TODO implementare
-        return null;
+        return getAdjacentNodesOf(this.getNode(label));
     }
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(int i) {
-        // TODO implementare
-        return null;
+        return getAdjacentNodesOf(this.getNode(i));
     }
 
     @Override
     public Set<GraphNode<L>> getPredecessorNodesOf(GraphNode<L> node) {
-        // TODO implementare
-        return null;
+        if(node == null)
+            throw new NullPointerException("Nodo passato e' nullo");
+
+        if(!this.nodesIndex.containsKey(node))
+            throw new IllegalArgumentException("Il nodo passato non esiste");
+
+        if(!this.isDirected())
+            throw new UnsupportedOperationException("Questo e' un grafo non orientato");
+        //mi creo un set per conservare piu di un nodo adiacente, per comodita' nei test il
+        //prof ha consigliato di usare una HashSet
+        Set<GraphNode<L>> predecessor = new HashSet<>();
+        //scorro tramite foreach tutti gli array list dentro a matrix
+        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
+            for(GraphEdge<L> edge : edges) {
+                if(edge.getNode2().equals(node)) predecessor.add(edge.getNode1());
+            }
+        }
+        return predecessor;
     }
 
     @Override
     public Set<GraphNode<L>> getPredecessorNodesOf(L label) {
-        // TODO implementare
-        return null;
+        return getPredecessorNodesOf(this.getNode(label));
     }
 
     @Override
     public Set<GraphNode<L>> getPredecessorNodesOf(int i) {
-        // TODO implementare
-        return null;
+        return getPredecessorNodesOf(this.getNode(i));
     }
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(GraphNode<L> node) {
-        // TODO implementare
-        return null;
+        Set<GraphEdge<L>> edgesApp = new HashSet<>();
+        //scorro tramite foreach tutti gli array list dentro a matrix
+        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
+            for(GraphEdge<L> edge : edges) {
+                if(edge.getNode1().equals(node)) edgesApp.add(edge);
+            }
+        }
+        return edgesApp;
     }
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(L label) {
-        // TODO implementare
-        return null;
+        return this.getEdgesOf(this.getNode(label));
     }
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(int i) {
-        // TODO implementare
-        return null;
+        return this.getEdgesOf(this.getNode(i));
     }
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(GraphNode<L> node) {
-        // TODO implementare
-        return null;
+        Set<GraphEdge<L>> edgesApp = new HashSet<>();
+        //scorro tramite foreach tutti gli array list dentro a matrix
+        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
+            for(GraphEdge<L> edge : edges) {
+                if(edge.getNode2().equals(node)) edgesApp.add(edge);
+            }
+        }
+        return edgesApp;
     }
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(L label) {
-        // TODO implementare
-        return null;
+        return this.getIngoingEdgesOf(this.getNode(label));
     }
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(int i) {
-        // TODO implementare
-        return null;
+        return this.getIngoingEdgesOf(this.getNode(i));
     }
 
     @Override
     public Set<GraphEdge<L>> getEdges() {
-        // TODO implementare
-        return null;
+        Set<GraphEdge<L>> edgesApp = new HashSet<>();
+        //scorro tramite foreach tutti gli array list dentro a matrix
+        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
+            edgesApp.addAll(edges);
+        }
+        return edgesApp;
     }
 }
