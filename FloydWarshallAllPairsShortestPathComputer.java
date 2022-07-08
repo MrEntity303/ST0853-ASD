@@ -9,9 +9,9 @@ import java.util.List;
  * Implementazione dell'algoritmo di Floyd-Warshall per il calcolo di cammini
  * minimi tra tutte le coppie di nodi in un grafo pesato che può contenere anche
  * pesi negativi, ma non cicli di peso negativo.
- * 
+ *
  * L'algoritmo usa la tecnica della programmazione dinamica.
- * 
+ *
  * @author Template: Luca Tesei
  *
  * @param <L>
@@ -48,32 +48,48 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      * Crea un calcolatore di cammini minimi fra tutte le coppie di nodi per un
      * grafo orientato e pesato. Non esegue il calcolo, che viene eseguito
      * invocando successivamente il metodo computeShortestPaths().
-     * 
-     * @param graph
+     *
+     * @param g
      *                  il grafo su cui opera il calcolatore di cammini minimi
      * @throws NullPointerException
      *                                      se il grafo passato è nullo
-     * 
+     *
      * @throws IllegalArgumentException
      *                                      se il grafo passato è vuoto
-     * 
+     *
      * @throws IllegalArgumentException
      *                                      se il grafo passato non è orientato
-     * 
+     *
      * @throws IllegalArgumentException
      *                                      se il grafo passato non è pesato,
      *                                      cioè esiste almeno un arco il cui
      *                                      peso è {@code Double.NaN}
      */
     public FloydWarshallAllPairsShortestPathComputer(Graph<L> g) {
-        // TODO implementare
+
+        if(g == null)
+            throw new NullPointerException();
+        if(g.isEmpty())
+            throw new IllegalArgumentException();
+        if(!g.isDirected())
+            throw new IllegalArgumentException();
+        for (GraphEdge<L> newEdge: g.getEdges())
+        {
+            if(newEdge.hasWeight())
+                throw new IllegalArgumentException();
+        }
+        //costruisco predecessorMatrix e costMatrix con il numero
+        //di nodi del grafo passato
+        this.predecessorMatrix = new int [g.nodeCount()][g.nodeCount()];
+        this.costMatrix = new double [g.nodeCount()] [g.nodeCount()];
+        this.graph = g;
     }
 
     /**
      * Esegue il calcolo per la matrice dei costi dei cammini minimi e per la
      * matrice dei predecessori così come specificato dall'algoritmo di
      * Floyd-Warshall.
-     * 
+     *
      * @throws IllegalStateException
      *                                   se il calcolo non può essere effettuato
      *                                   per via dei valori dei pesi del grafo,
@@ -82,11 +98,12 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      */
     public void computeShortestPaths() {
         // TODO implementare
+
     }
 
     /**
      * Determina se è stata invocatala procedura di calcolo dei cammini minimi.
-     * 
+     *
      * @return true se i cammini minimi sono stati calcolati, false altrimenti
      */
     public boolean isComputed() {
@@ -95,7 +112,7 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
 
     /**
      * Restituisce il grafo su cui opera questo calcolatore.
-     * 
+     *
      * @return il grafo su cui opera questo calcolatore
      */
     public Graph<L> getGraph() {
@@ -106,7 +123,7 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      * Restituisce una lista di archi da un nodo sorgente a un nodo target. Tale
      * lista corrisponde a un cammino minimo tra i due nodi nel grafo gestito da
      * questo calcolatore.
-     * 
+     *
      * @param sourceNode
      *                       il nodo di partenza del cammino minimo da
      *                       restituire
@@ -116,20 +133,20 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      *         vuota se il nodo sorgente è il nodo target. Viene restituito
      *         {@code null} se il nodo target non è raggiungibile dal nodo
      *         sorgente
-     * 
+     *
      * @throws NullPointerException
      *                                      se almeno uno dei nodi passati è
      *                                      nullo
-     * 
+     *
      * @throws IllegalArgumentException
      *                                      se almeno uno dei nodi passati non
      *                                      esiste
-     * 
+     *
      * @throws IllegalStateException
      *                                      se non è stato eseguito il calcolo
      *                                      dei cammini minimi
-     * 
-     * 
+     *
+     *
      */
     public List<GraphEdge<L>> getShortestPath(GraphNode<L> sourceNode,
             GraphNode<L> targetNode) {
@@ -140,7 +157,7 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
     /**
      * Restituisce il costo di un cammino minimo da un nodo sorgente a un nodo
      * target.
-     * 
+     *
      * @param sourceNode
      *                       il nodo di partenza del cammino minimo
      * @param targetNode
@@ -149,20 +166,20 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      *         target. Viene restituito {@code Double.POSITIVE_INFINITY} se il
      *         nodo target non è raggiungibile dal nodo sorgente, mentre viene
      *         restituito zero se il nodo sorgente è il nodo target.
-     * 
+     *
      * @throws NullPointerException
      *                                      se almeno uno dei nodi passati è
      *                                      nullo
-     * 
+     *
      * @throws IllegalArgumentException
      *                                      se almeno uno dei nodi passati non
      *                                      esiste
-     * 
+     *
      * @throws IllegalStateException
      *                                      se non è stato eseguito il calcolo
      *                                      dei cammini minimi
-     * 
-     * 
+     *
+     *
      */
     public double getShortestPathCost(GraphNode<L> sourceNode,
             GraphNode<L> targetNode) {
@@ -174,7 +191,7 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      * Genera una stringa di descrizione di un path riportando i nodi
      * attraversati e i pesi degli archi. Nel caso di cammino vuoto genera solo
      * la stringa {@code "[ ]"}.
-     * 
+     *
      * @param path
      *                 un cammino minimo
      * @return una stringa di descrizione del cammino minimo
