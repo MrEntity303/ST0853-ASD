@@ -25,16 +25,16 @@ import java.util.List;
  */
 public class Heap3Sort<E extends Comparable<E>> implements SortingAlgorithm<E> {
 
-    // TODO inserire eventuali variabili istanza che servono
+    //TODO inserire eventuali variabili istanza che servono
 
     @Override
     public SortingAlgorithmResult<E> sort(List<E> l) {
-        // TODO implementare
+        //TODO implementare
         return null;
     }
 
     private void heapify(List<E> l, int i) {
-        // TODO implementare adattando al caso di heap ternario
+        //TODO implementare adattando al caso di heap ternario
     }
 
     @Override
