@@ -400,11 +400,17 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(L label) {
-        return getAdjacentNodesOf(this.getNode(label));
+        return getAdjacentNodesOf(new GraphNode<L>(label));
     }
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(int i) {
+        if (i < 0 || i > this.nodeCount() - 1)
+            throw new IndexOutOfBoundsException("L'indice passato come parametro non è presente.");
+
+        if (!this.isDirected())
+            throw new UnsupportedOperationException("Operazione non supportata da un grafo non diretto.");
+
         return getAdjacentNodesOf(this.getNode(i));
     }
 
