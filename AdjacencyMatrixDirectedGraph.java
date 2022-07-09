@@ -463,11 +463,17 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(GraphNode<L> node) {
+        if(node == null)
+            throw new NullPointerException("Nodo nullo passato.");
+        if(!nodesIndex.containsKey(node))
+            throw new IllegalArgumentException("Il nodo passato non esiste.");
+
         Set<GraphEdge<L>> edgesApp = new HashSet<>();
         //scorro tramite foreach tutti gli array list dentro a matrix
         for(ArrayList<GraphEdge<L>> edges : this.matrix) {
             for(GraphEdge<L> edge : edges) {
-                if(edge.getNode1().equals(node)) edgesApp.add(edge);
+                if(edge.getNode1().equals(node))
+                    edgesApp.add(edge);
             }
         }
         return edgesApp;
@@ -480,16 +486,28 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(int i) {
+        if (i < 0 || i > this.edgeCount() - 1)
+            throw new IndexOutOfBoundsException("L'indice passato come parametro non è presente.");
+
+        if (!this.isDirected())
+            throw new UnsupportedOperationException("Operazione non supportata da un grafo non diretto.");
+
         return this.getEdgesOf(this.getNode(i));
     }
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(GraphNode<L> node) {
+        if(node == null)
+            throw new NullPointerException("Nodo nullo passato.");
+        if(!nodesIndex.containsKey(node))
+            throw new IllegalArgumentException("Il nodo passato non esiste.");
+
         Set<GraphEdge<L>> edgesApp = new HashSet<>();
         //scorro tramite foreach tutti gli array list dentro a matrix
         for(ArrayList<GraphEdge<L>> edges : this.matrix) {
             for(GraphEdge<L> edge : edges) {
-                if(edge.getNode2().equals(node)) edgesApp.add(edge);
+                if(edge.getNode2().equals(node))
+                    edgesApp.add(edge);
             }
         }
         return edgesApp;
@@ -502,6 +520,12 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(int i) {
+        if (i < 0 || i > this.edgeCount() - 1)
+            throw new IndexOutOfBoundsException("L'indice passato come parametro non è presente.");
+
+        if (!this.isDirected())
+            throw new UnsupportedOperationException("Operazione non supportata da un grafo non diretto.");
+
         return this.getIngoingEdgesOf(this.getNode(i));
     }
 

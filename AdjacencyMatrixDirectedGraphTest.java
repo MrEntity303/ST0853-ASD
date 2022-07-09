@@ -495,26 +495,278 @@ class AdjacencyMatrixDirectedGraphTest {
 
     @Test
     final void testGetEdgesOf() {
-        // TODO implementare
+        //todo fix
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+
+        assertThrows(NullPointerException.class,
+                () -> graph.getEdgesOf((GraphNode<String>) null));
+
+        GraphNode<String> node1 = new GraphNode<>("a");
+        GraphNode<String> node2 = new GraphNode<>("b");
+        GraphNode<String> node3 = new GraphNode<>("c");
+        GraphNode<String> node4 = new GraphNode<>("d");
+        GraphNode<String> node5 = new GraphNode<>("e");
+        GraphNode<String> node6 = new GraphNode<>("f");
+
+
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.addNode(node3);
+        graph.addNode(node4);
+        graph.addNode(node5);
+
+        GraphEdge<String> edge1 = new GraphEdge<>(node1, node3, graph.isDirected());
+        GraphEdge<String> edge2 = new GraphEdge<>(node2, node4, graph.isDirected());
+        GraphEdge<String> edge3 = new GraphEdge<>(node2, node5, graph.isDirected());
+        GraphEdge<String> edge4 = new GraphEdge<>(node3, node2, graph.isDirected());
+        GraphEdge<String> edge5 = new GraphEdge<>(node4, node5, graph.isDirected());
+        GraphEdge<String> edge6 = new GraphEdge<>(node5, node1, graph.isDirected());
+        GraphEdge<String> edge7 = new GraphEdge<>(node5, node4, graph.isDirected());
+
+
+        graph.addEdge(edge1);
+        graph.addEdge(edge2);
+        graph.addEdge(edge3);
+        graph.addEdge(edge4);
+        graph.addEdge(edge5);
+        graph.addEdge(edge6);
+        graph.addEdge(edge7);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> graph.getEdgesOf((node6)));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> graph.getEdgesOf(("t")));
+
+        assertThrows(IndexOutOfBoundsException.class,
+                () -> graph.getEdgesOf((9)));
+
+        //getEdgesOf passando un nodo
+        Set<GraphEdge<String>> edgesOfNode1 = new HashSet<>();
+        edgesOfNode1.add(edge1);
+        assertEquals(graph.getEdgesOf(node1), edgesOfNode1);
+
+        //getEdgesOf passando un una label
+        Set<GraphEdge<String>> edgesOfNode2 = new HashSet<>();
+        edgesOfNode2.add(edge2);
+        edgesOfNode2.add(edge3);
+        assertEquals(graph.getEdgesOf("b"), edgesOfNode2);
+
+        //getEdgesOf passando un indice
+        Set<GraphEdge<String>> edgesOfNode3 = new HashSet<>();
+        edgesOfNode3.add(edge4);
+
+        assertEquals(graph.getEdgesOf(2), edgesOfNode3);
+
     }
 
     @Test
     final void testGetEdges() {
-        // TODO implementare
+        Graph <String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> node1 = new GraphNode<>("a");
+        GraphNode<String> node2 = new GraphNode<>("b");
+        GraphNode<String> node3 = new GraphNode<>("c");
+        GraphNode<String> node4 = new GraphNode<>("d");
+        GraphNode<String> node5 = new GraphNode<>("e");
+
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.addNode(node3);
+        graph.addNode(node4);
+        graph.addNode(node5);
+
+        GraphEdge<String> edge1 = new GraphEdge<>(node1, node3, graph.isDirected());
+        GraphEdge<String> edge2 = new GraphEdge<>(node2, node4, graph.isDirected());
+        GraphEdge<String> edge3 = new GraphEdge<>(node2, node5, graph.isDirected());
+        GraphEdge<String> edge4 = new GraphEdge<>(node3, node2, graph.isDirected());
+        GraphEdge<String> edge5 = new GraphEdge<>(node4, node5, graph.isDirected());
+        GraphEdge<String> edge6 = new GraphEdge<>(node5, node1, graph.isDirected());
+        GraphEdge<String> edge7 = new GraphEdge<>(node5, node4, graph.isDirected());
+
+        graph.addEdge(edge1);
+        graph.addEdge(edge2);
+        graph.addEdge(edge3);
+        graph.addEdge(edge4);
+        graph.addEdge(edge5);
+        graph.addEdge(edge6);
+        graph.addEdge(edge7);
+
+        Set<GraphEdge<String>> edges = new HashSet<>();
+        edges.add(edge1);
+        edges.add(edge2);
+        edges.add(edge3);
+        edges.add(edge4);
+        edges.add(edge5);
+        edges.add(edge6);
+        edges.add(edge7);
+
+        assertEquals(edges,graph.getEdges());
     }
 
     @Test
     final void testGetDegreeOf() {
-        // TODO implementare
+        // TODO fix
+        Graph <String> graph = new AdjacencyMatrixDirectedGraph<>();
+
+        assertThrows(NullPointerException.class,
+                () -> graph.getDegreeOf((GraphNode<String>) null));
+
+        GraphNode<String> node1 = new GraphNode<>("a");
+        GraphNode<String> node2 = new GraphNode<>("b");
+        GraphNode<String> node3 = new GraphNode<>("c");
+        GraphNode<String> node4 = new GraphNode<>("d");
+        GraphNode<String> node5 = new GraphNode<>("e");
+        GraphNode<String> node6 = new GraphNode<>("f");
+
+
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.addNode(node3);
+        graph.addNode(node4);
+        graph.addNode(node5);
+
+        GraphEdge<String> edge1 = new GraphEdge<>(node1, node3, graph.isDirected());
+        GraphEdge<String> edge2 = new GraphEdge<>(node2, node4, graph.isDirected());
+        GraphEdge<String> edge3 = new GraphEdge<>(node2, node5, graph.isDirected());
+        GraphEdge<String> edge4 = new GraphEdge<>(node3, node2, graph.isDirected());
+        GraphEdge<String> edge5 = new GraphEdge<>(node4, node5, graph.isDirected());
+        GraphEdge<String> edge6 = new GraphEdge<>(node5, node1, graph.isDirected());
+        GraphEdge<String> edge7 = new GraphEdge<>(node5, node4, graph.isDirected());
+
+        graph.addEdge(edge1);
+        graph.addEdge(edge2);
+        graph.addEdge(edge3);
+        graph.addEdge(edge4);
+        graph.addEdge(edge5);
+        graph.addEdge(edge6);
+        graph.addEdge(edge7);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> graph.getDegreeOf((node6)));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> graph.getDegreeOf(("y")));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> graph.getDegreeOf((9)));
+
+        assertEquals(2,graph.getDegreeOf(node1));
     }
 
     @Test
     final void testGetIngoingEdgesOf() {
-        // TODO implementare
+        // TODO fix
+        Graph <String> graph = new AdjacencyMatrixDirectedGraph<>();
+
+        assertThrows(NullPointerException.class,
+                () -> graph.getIngoingEdgesOf((GraphNode<String>) null));
+
+        GraphNode<String> node1 = new GraphNode<>("a");
+        GraphNode<String> node2 = new GraphNode<>("b");
+        GraphNode<String> node3 = new GraphNode<>("c");
+        GraphNode<String> node4 = new GraphNode<>("d");
+        GraphNode<String> node5 = new GraphNode<>("e");
+        GraphNode<String> node6 = new GraphNode<>("f");
+
+
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.addNode(node3);
+        graph.addNode(node4);
+        graph.addNode(node5);
+
+        GraphEdge<String> edge1 = new GraphEdge<>(node1, node3, graph.isDirected());
+        GraphEdge<String> edge2 = new GraphEdge<>(node2, node4, graph.isDirected());
+        GraphEdge<String> edge3 = new GraphEdge<>(node2, node5, graph.isDirected());
+        GraphEdge<String> edge4 = new GraphEdge<>(node3, node2, graph.isDirected());
+        GraphEdge<String> edge5 = new GraphEdge<>(node4, node5, graph.isDirected());
+        GraphEdge<String> edge6 = new GraphEdge<>(node5, node1, graph.isDirected());
+        GraphEdge<String> edge7 = new GraphEdge<>(node5, node4, graph.isDirected());
+
+        graph.addEdge(edge1);
+        graph.addEdge(edge2);
+        graph.addEdge(edge3);
+        graph.addEdge(edge4);
+        graph.addEdge(edge5);
+        graph.addEdge(edge6);
+        graph.addEdge(edge7);
+
+        Set<GraphEdge<String>> edges = new HashSet<>();
+
+        edges.add(edge1);
+        edges.add(edge2);
+        edges.add(edge3);
+        edges.add(edge4);
+        edges.add(edge5);
+        edges.add(edge6);
+        edges.add(edge7);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> graph.getIngoingEdgesOf((node6)));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> graph.getIngoingEdgesOf(("y")));
+
+        assertThrows(IndexOutOfBoundsException.class,
+                () -> graph.getIngoingEdgesOf((9)));
+
+        assertEquals(edges,graph.getIngoingEdgesOf(node1));
+
+
     }
     
     @Test
     final void testGetPredecessorNodesOf() {
-        // TODO implementare
+        // TODO fix
+        Graph <String> graph = new AdjacencyMatrixDirectedGraph<>();
+
+        assertThrows(NullPointerException.class,
+                () -> graph.getPredecessorNodesOf((GraphNode<String>) null));
+
+        GraphNode<String> node1 = new GraphNode<>("a");
+        GraphNode<String> node2 = new GraphNode<>("b");
+        GraphNode<String> node3 = new GraphNode<>("c");
+        GraphNode<String> node4 = new GraphNode<>("d");
+        GraphNode<String> node5 = new GraphNode<>("e");
+        GraphNode<String> node6 = new GraphNode<>("f");
+
+
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.addNode(node3);
+        graph.addNode(node4);
+        graph.addNode(node5);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> graph.getPredecessorNodesOf((node6)));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> graph.getPredecessorNodesOf(("y")));
+
+        assertThrows(IndexOutOfBoundsException.class,
+                () -> graph.getPredecessorNodesOf((9)));
+
+        GraphEdge<String> edge1 = new GraphEdge<>(node1, node3, graph.isDirected());
+        GraphEdge<String> edge2 = new GraphEdge<>(node2, node4, graph.isDirected());
+        GraphEdge<String> edge3 = new GraphEdge<>(node2, node5, graph.isDirected());
+        GraphEdge<String> edge4 = new GraphEdge<>(node3, node2, graph.isDirected());
+        GraphEdge<String> edge5 = new GraphEdge<>(node4, node5, graph.isDirected());
+        GraphEdge<String> edge6 = new GraphEdge<>(node5, node1, graph.isDirected());
+        GraphEdge<String> edge7 = new GraphEdge<>(node5, node4, graph.isDirected());
+
+        graph.addEdge(edge1);
+        graph.addEdge(edge2);
+        graph.addEdge(edge3);
+        graph.addEdge(edge4);
+        graph.addEdge(edge5);
+        graph.addEdge(edge6);
+        graph.addEdge(edge7);
+
+        Set<GraphNode<String>> predecessorNodes = new HashSet<>();
+        predecessorNodes.add(node3);
+        predecessorNodes.add(node5);
+
+
+        assertEquals(predecessorNodes,graph.getPredecessorNodesOf(node1));
     }
 }
