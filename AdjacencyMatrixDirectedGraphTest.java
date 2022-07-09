@@ -360,38 +360,38 @@ class AdjacencyMatrixDirectedGraphTest {
         assertTrue(g.getEdge(i, j) == null);
     }
 
-    @Test
-    final void testGetEdge() {
-        // TODO implementare
-    }
-
-    @Test
-    final void testGetAdjacentNodesOf() {
-        // TODO implementare
-    }
-
-    @Test
-    final void testGetEdgesOf() {
-        // TODO implementare
-    }
-
-    @Test
-    final void testGetEdges() {
-        // TODO implementare
-    }
-
-    @Test
-    final void testGetDegreeOf() {
-        // TODO implementare
-    }
-
-    @Test
-    final void testGetIngoingEdgesOf() {
-        // TODO implementare
-    }
-    
-    @Test
-    final void testGetPredecessorNodesOf() {
-        // TODO implementare
-    }
+//    @Test
+//    final void testGetEdge() {
+//        // TODO implementare
+//    }
+//
+//    @Test
+//    final void testGetAdjacentNodesOf() {
+//        // TODO implementare
+//    }
+//
+//    @Test
+//    final void testGetEdgesOf() {
+//        // TODO implementare
+//    }
+//
+//    @Test
+//    final void testGetEdges() {
+//        // TODO implementare
+//    }
+//
+//    @Test
+//    final void testGetDegreeOf() {
+//        // TODO implementare
+//    }
+//
+//    @Test
+//    final void testGetIngoingEdgesOf() {
+//        // TODO implementare
+//    }
+//
+//    @Test
+//    final void testGetPredecessorNodesOf() {
+//        // TODO implementare
+//    }
 }
