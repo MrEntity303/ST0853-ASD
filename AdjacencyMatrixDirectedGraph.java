@@ -275,12 +275,12 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public boolean addEdge(L label1, L label2) {
-        return this.addEdge(new GraphEdge<>(this.getNode(label1), this.getNode(label2), true));
+        return this.addEdge(new GraphEdge<>(this.getNode(new GraphNode<>(label1)), this.getNode(new GraphNode<>(label2)), true));
     }
 
     @Override
     public boolean addWeightedEdge(L label1, L label2, double weight) {
-        return this.addEdge(new GraphEdge<>(this.getNode(label1), this.getNode(label2), true, weight));
+        return this.addEdge(new GraphEdge<>(this.getNode(new GraphNode<>(label1)), this.getNode(new GraphNode<>(label2)), true, weight));
     }
 
     @Override
@@ -350,7 +350,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     public void removeEdge(L label1, L label2) {
 //        if (this.getNode(label1)==null || this.getNode(label2)==null)
 //            throw new IllegalArgumentException();
-        this.removeEdge(this.getEdge(this.getNode(label1), this.getNode(label2)));
+        this.removeEdge(this.getEdge(this.getNode(new GraphNode<>(label1)), this.getNode(new GraphNode<>(label2))));
     }
 
     @Override
@@ -383,7 +383,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public GraphEdge<L> getEdge(L label1, L label2) {
-        return this.getEdge(new GraphEdge<>(this.getNode(label1), this.getNode(label2), true));
+        return this.getEdge(new GraphEdge<>(this.getNode(new GraphNode<>(label1)), this.getNode(new GraphNode<>(label2)), true));
     }
 
     @Override
@@ -412,7 +412,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(L label) {
-        return getAdjacentNodesOf(new GraphNode<L>(label));
+        return getAdjacentNodesOf(new GraphNode<>(label));
     }
 
     @Override
@@ -450,7 +450,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphNode<L>> getPredecessorNodesOf(L label) {
-        return getPredecessorNodesOf(this.getNode(label));
+        return getPredecessorNodesOf(this.getNode(new GraphNode<>(label)));
     }
 
     @Override
@@ -478,7 +478,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(L label) {
-        return this.getEdgesOf(this.getNode(label));
+        return this.getEdgesOf(this.getNode(new GraphNode<>(label)));
     }
 
     @Override
@@ -500,7 +500,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(L label) {
-        return this.getIngoingEdgesOf(this.getNode(label));
+        return this.getIngoingEdgesOf(this.getNode(new GraphNode<>(label)));
     }
 
     @Override
