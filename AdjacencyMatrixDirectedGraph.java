@@ -302,12 +302,19 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         if(!nodesIndex.containsKey(edge.getNode2()) || !nodesIndex.containsKey(edge.getNode1()))
             throw new IllegalArgumentException("Un nodo e' nullo");
 //        boolean flag = false;
-
+/*
         for(ArrayList<GraphEdge<L>> edges : this.matrix) {
             for(GraphEdge<L> edgeApp : edges) {
                 if(edgeApp.equals(edge)) edges.remove(edge);
             }
         }
+*/
+        // toChange  assume il valore dell'arraylist della posizione specifica di node1.
+        ArrayList<GraphEdge<L>> toChange = matrix.get(nodesIndex.get(edge.getNode1()));
+        //rimuovo l'arco da toChange
+        toChange.remove(edge);
+        //Sovrascrivo la riga di matrix con toChange
+        matrix.set(nodesIndex.get(edge.getNode1()), toChange);
 //        ArrayList<GraphEdge<L>> edges = matrix.get(nodesIndex.get(edge.getNode1()));
 //        for(GraphEdge<L> edgeApp : edges){
 //            if (edgeApp.equals(edge)) {
@@ -345,14 +352,17 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public void removeEdge(L label1, L label2) {
-//        if (this.getNode(label1)==null || this.getNode(label2)==null)
-//            throw new IllegalArgumentException();
-        this.removeEdge(this.getEdge(this.getNode(new GraphNode<>(label1)), this.getNode(new GraphNode<>(label2))));
+        this.removeEdge(new GraphEdge<L>(new GraphNode<>(label1), (new GraphNode<>(label2)), true));
     }
 
     @Override
     public void removeEdge(int i, int j) {
-        this.removeEdge(this.getEdge(this.getNode(i), this.getNode(j)));
+        if (i < 0 || i > nodeCount() - 1)
+            throw new IndexOutOfBoundsException();
+        if (j < 0 || j > nodeCount() - 1)
+            throw new IndexOutOfBoundsException();
+
+        this.removeEdge(new GraphEdge<L>(this.getNode(i), this.getNode(j), true));
     }
 
     @Override
@@ -447,7 +457,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphNode<L>> getPredecessorNodesOf(L label) {
-        return getPredecessorNodesOf(this.getNode(new GraphNode<>(label)));
+        return getPredecessorNodesOf(new GraphNode<>(label));
     }
 
     @Override
@@ -481,12 +491,12 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(L label) {
-        return this.getEdgesOf(this.getNode(new GraphNode<>(label)));
+        return this.getEdgesOf(new GraphNode<>(label));
     }
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(int i) {
-        if (i < 0 || i > this.edgeCount() - 1)
+        if (i < 0 || i > this.nodeCount() - 1)
             throw new IndexOutOfBoundsException("L'indice passato come parametro non è presente.");
 
         if (!this.isDirected())
@@ -515,12 +525,12 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(L label) {
-        return this.getIngoingEdgesOf(this.getNode(new GraphNode<>(label)));
+        return this.getIngoingEdgesOf(new GraphNode<>(label));
     }
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(int i) {
-        if (i < 0 || i > this.edgeCount() - 1)
+        if (i < 0 || i > this.nodeCount() - 1)
             throw new IndexOutOfBoundsException("L'indice passato come parametro non è presente.");
 
         if (!this.isDirected())

@@ -7,8 +7,6 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-//TODO completare gli import necessari
-
 //ATTENZIONE: è vietato includere import a pacchetti che non siano della Java SE
 
 /**
@@ -495,7 +493,7 @@ class AdjacencyMatrixDirectedGraphTest {
 
     @Test
     final void testGetEdgesOf() {
-        //todo fix
+
         Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
 
         assertThrows(NullPointerException.class,
@@ -605,7 +603,7 @@ class AdjacencyMatrixDirectedGraphTest {
 
     @Test
     final void testGetDegreeOf() {
-        // TODO fix
+
         Graph <String> graph = new AdjacencyMatrixDirectedGraph<>();
 
         assertThrows(NullPointerException.class,
@@ -647,7 +645,7 @@ class AdjacencyMatrixDirectedGraphTest {
         assertThrows(IllegalArgumentException.class,
                 () -> graph.getDegreeOf(("y")));
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(IndexOutOfBoundsException.class,
                 () -> graph.getDegreeOf((9)));
 
         assertEquals(2,graph.getDegreeOf(node1));
@@ -655,7 +653,7 @@ class AdjacencyMatrixDirectedGraphTest {
 
     @Test
     final void testGetIngoingEdgesOf() {
-        // TODO fix
+
         Graph <String> graph = new AdjacencyMatrixDirectedGraph<>();
 
         assertThrows(NullPointerException.class,
@@ -693,13 +691,8 @@ class AdjacencyMatrixDirectedGraphTest {
 
         Set<GraphEdge<String>> edges = new HashSet<>();
 
-        edges.add(edge1);
-        edges.add(edge2);
         edges.add(edge3);
-        edges.add(edge4);
         edges.add(edge5);
-        edges.add(edge6);
-        edges.add(edge7);
 
         assertThrows(IllegalArgumentException.class,
                 () -> graph.getIngoingEdgesOf((node6)));
@@ -710,14 +703,14 @@ class AdjacencyMatrixDirectedGraphTest {
         assertThrows(IndexOutOfBoundsException.class,
                 () -> graph.getIngoingEdgesOf((9)));
 
-        assertEquals(edges,graph.getIngoingEdgesOf(node1));
+        assertEquals(edges,graph.getIngoingEdgesOf(node5));
 
 
     }
     
     @Test
     final void testGetPredecessorNodesOf() {
-        // TODO fix
+
         Graph <String> graph = new AdjacencyMatrixDirectedGraph<>();
 
         assertThrows(NullPointerException.class,
@@ -728,6 +721,7 @@ class AdjacencyMatrixDirectedGraphTest {
         GraphNode<String> node3 = new GraphNode<>("c");
         GraphNode<String> node4 = new GraphNode<>("d");
         GraphNode<String> node5 = new GraphNode<>("e");
+
         GraphNode<String> node6 = new GraphNode<>("f");
 
 
@@ -763,10 +757,10 @@ class AdjacencyMatrixDirectedGraphTest {
         graph.addEdge(edge7);
 
         Set<GraphNode<String>> predecessorNodes = new HashSet<>();
-        predecessorNodes.add(node3);
-        predecessorNodes.add(node5);
+        predecessorNodes.add(node2);
+        predecessorNodes.add(node4);
 
 
-        assertEquals(predecessorNodes,graph.getPredecessorNodesOf(node1));
+        assertEquals(predecessorNodes,graph.getPredecessorNodesOf(node5));
     }
 }
