@@ -297,29 +297,26 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     public void removeEdge(GraphEdge<L> edge) {
         if(edge == null)
             throw new NullPointerException("L'arco e' nullo");
-//        if(this.getEdge(edge) == null)
-//            throw new IllegalArgumentException("L'arco non esiste in questo grafo");
-        if(edge.getNode2() == null || edge.getNode1() == null)
+        if(this.getEdge(edge) == null)
+            throw new IllegalArgumentException("L'arco non esiste in questo grafo");
+        if(!nodesIndex.containsKey(edge.getNode2()) || !nodesIndex.containsKey(edge.getNode1()))
             throw new IllegalArgumentException("Un nodo e' nullo");
-        boolean flag = false;
+//        boolean flag = false;
 
-//        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
-//            for(GraphEdge<L> edgeApp : edges) {
-//                if(edgeApp.equals(edge)) {
-//                    edges.remove(edge);
-//                    flag = true;
-//                }
-//            }
-//        }
-        ArrayList<GraphEdge<L>> edges = matrix.get(nodesIndex.get(edge.getNode1()));
-        for(GraphEdge<L> edgeApp : edges){
-            if (edgeApp.equals(edge)) {
-                edges.remove(edge);
-                flag = true;
+        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
+            for(GraphEdge<L> edgeApp : edges) {
+                if(edgeApp.equals(edge)) edges.remove(edge);
             }
         }
-        if(!flag)
-            throw new IllegalArgumentException("L'arco non esiste in questo grafo");
+//        ArrayList<GraphEdge<L>> edges = matrix.get(nodesIndex.get(edge.getNode1()));
+//        for(GraphEdge<L> edgeApp : edges){
+//            if (edgeApp.equals(edge)) {
+//                edges.remove(edge);
+//                flag = true;
+//            }
+//        }
+//        if(!flag)
+//            throw new IllegalArgumentException("L'arco non esiste in questo grafo");
 
 
 //        if(edge == null)
