@@ -301,58 +301,22 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
             throw new IllegalArgumentException("L'arco non esiste in questo grafo");
         if(!nodesIndex.containsKey(edge.getNode2()) || !nodesIndex.containsKey(edge.getNode1()))
             throw new IllegalArgumentException("Un nodo e' nullo");
-//        boolean flag = false;
-/*
-        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
-            for(GraphEdge<L> edgeApp : edges) {
-                if(edgeApp.equals(edge)) edges.remove(edge);
-            }
-        }
-*/
         // toChange  assume il valore dell'arraylist della posizione specifica di node1.
         ArrayList<GraphEdge<L>> toChange = matrix.get(nodesIndex.get(edge.getNode1()));
         //rimuovo l'arco da toChange
         toChange.remove(edge);
         //Sovrascrivo la riga di matrix con toChange
         matrix.set(nodesIndex.get(edge.getNode1()), toChange);
-//        ArrayList<GraphEdge<L>> edges = matrix.get(nodesIndex.get(edge.getNode1()));
-//        for(GraphEdge<L> edgeApp : edges){
-//            if (edgeApp.equals(edge)) {
-//                edges.remove(edge);
-//                flag = true;
-//            }
-//        }
-//        if(!flag)
-//            throw new IllegalArgumentException("L'arco non esiste in questo grafo");
-
-
-//        if(edge == null)
-//            throw new NullPointerException("L'arco e' nullo");
-//        if(edge.getNode2() == null || edge.getNode1() == null)
-//            throw new IllegalArgumentException("Un nodo e' nullo");
-//        if (matrix.get(nodesIndex.get(edge.getNode1())).get(nodesIndex.get(edge.getNode2())) == null)
-//            throw new IllegalArgumentException("Arco passato non appartenente al grafo.");
-//
-//        for(ArrayList<GraphEdge<L>> edges : this.matrix) {
-//            for(GraphEdge<L> edgeApp : edges) {
-//                if(edgeApp.equals(edge)) edges.remove(edge);
-//            }
-//        }
-
     }
 
     @Override
     public void removeEdge(GraphNode<L> node1, GraphNode<L> node2) {
-//        if(node1 == null || node2 == null)
-//            throw new NullPointerException("Uno dei nodi passati e' nullo");
-//        if (matrix.get(nodesIndex.get(node1)).get(nodesIndex.get(node2)) == null)
-//            throw new IllegalArgumentException("Arco passato non appartenente al grafo.");
         this.removeEdge(new GraphEdge<>(node1, node2, true));
     }
 
     @Override
     public void removeEdge(L label1, L label2) {
-        this.removeEdge(new GraphEdge<L>(new GraphNode<>(label1), (new GraphNode<>(label2)), true));
+        this.removeEdge(new GraphEdge<>(new GraphNode<>(label1), (new GraphNode<>(label2)), true));
     }
 
     @Override
@@ -361,8 +325,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
             throw new IndexOutOfBoundsException();
         if (j < 0 || j > nodeCount() - 1)
             throw new IndexOutOfBoundsException();
-
-        this.removeEdge(new GraphEdge<L>(this.getNode(i), this.getNode(j), true));
+        this.removeEdge(new GraphEdge<>(this.getNode(i), this.getNode(j), true));
     }
 
     @Override
