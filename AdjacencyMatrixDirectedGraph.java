@@ -21,22 +21,22 @@ import java.util.HashSet;
  * inserimento (0 è l'indice del primo nodo inserito, 1 del secondo e così via)
  * e quindi in ogni istante la matrice di adiacenza ha dimensione nodeCount() *
  * nodeCount(). La matrice, sempre quadrata, deve quindi aumentare di dimensione
- * ad ogni inserimento di un nodo. Per questo non è rappresentata tramite array
+ * a ogni inserimento di un nodo. Per questo non è rappresentata tramite array
  * ma tramite ArrayList.
  * 
  * Gli oggetti GraphNode<L>, cioè i nodi, sono memorizzati in una mappa che
- * associa ad ogni nodo l'indice assegnato (che può cambiare nel tempo). Il
+ * associa a ogni nodo l'indice assegnato (che può cambiare nel tempo). Il
  * dominio della mappa rappresenta quindi l'insieme dei nodi.
  * 
  * Gli archi sono memorizzati nella matrice di adiacenza. A differenza della
- * rappresentazione standard con matrice di adiacenza, la posizione i,j della
+ * rappresentazione standard con matrice di adiacenza, la posizione i, j della
  * matrice non contiene un flag di presenza, ma è null se i nodi i e j non sono
  * collegati da un arco e contiene un oggetto della classe GraphEdge<L> se lo
  * sono. Tale oggetto rappresenta l'arco.
  * 
  * Questa classe supporta i metodi di cancellazione di nodi e archi e supporta
  * tutti i metodi che usano indici, utilizzando l'indice assegnato a ogni nodo
- * in fase di inserimento ed eventualmente modificato successivamente.
+ * in fase d'inserimento ed eventualmente modificato successivamente.
  * 
  * @author Luca Tesei (template)
  *
@@ -92,7 +92,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     }
 
     /*
-     * Gli indici dei nodi vanno assegnati nell'ordine di inserimento a partire
+     * Gli indici dei nodi vanno assegnati nell'ordine d'inserimento a partire
      * da zero
      */
     @Override
@@ -109,7 +109,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         this.nodesIndex.putIfAbsent(node, this.nodeCount());
 
         // toInsert sara' il nuovo array list di un nodo
-        //ogni arrayList di un nodo conterra' solo i nodi a cui e' collegato
+        //ogni arrayList di un nodo contiene solo i nodi a cui è collegato
         ArrayList<GraphEdge<L>> toInsert = new ArrayList<>();
         matrix.add(toInsert);
 
@@ -137,7 +137,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
             throw new NullPointerException("Nodo passato e' nullo");
 
         if(!nodesIndex.containsKey(node))
-            throw new IllegalArgumentException("Il nodo onon esiste in questo grafo");
+            throw new IllegalArgumentException("Il nodo non esiste in questo grafo");
 
         Set<GraphNode<L>> toSet = nodesIndex.keySet();
         int elementDelete = nodesIndex.get(node);
@@ -193,7 +193,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         if (i < 0 || i > nodeCount()-1)
             throw new IndexOutOfBoundsException("Fuori dai limiti dell'intervallo");
 
-        //creo un iteratore per poter scorrere intera mappa ed estrarre il nodo tramite indice d'inserimento
+        //creo un iterator per poter scorrere intera mappa ed estrarre il nodo tramite indice d'inserimento
         Iterator<Map.Entry<GraphNode<L>, Integer>> it = nodesIndex.entrySet().iterator();
         //variabile di appoggio per il valore del iterator
         Map.Entry<GraphNode<L>, Integer> app;
@@ -215,7 +215,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         if(!this.nodesIndex.containsKey(node))
             throw new IllegalArgumentException("Il nodo passato non esiste in questo grafo");
 
-        //creo un iteratore per poter scorrere intera mappa ed estrarre il nodo tramite indice d'inserimento
+        //creo un iterator per poter scorrere intera mappa ed estrarre il nodo tramite indice d'inserimento
         Iterator<Map.Entry<GraphNode<L>, Integer>> it = nodesIndex.entrySet().iterator();
         //variabile di appoggio per il valore del iterator
         Map.Entry<GraphNode<L>, Integer> app;
@@ -301,7 +301,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
             throw new IllegalArgumentException("L'arco non esiste in questo grafo");
         if(!nodesIndex.containsKey(edge.getNode2()) || !nodesIndex.containsKey(edge.getNode1()))
             throw new IllegalArgumentException("Un nodo e' nullo");
-        // toChange  assume il valore dell'arraylist della posizione specifica di node1.
+        // toChange assume il valore del arraylist della posizione specifica di node1.
         ArrayList<GraphEdge<L>> toChange = matrix.get(nodesIndex.get(edge.getNode1()));
         //rimuovo l'arco da toChange
         toChange.remove(edge);
@@ -368,7 +368,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
         if(!this.nodesIndex.containsKey(node))
             throw new IllegalArgumentException("Il nodo passato non esiste");
-        //mi creo un set per conservare piu di un nodo adiacente, per comodita' nei test il
+        //mi creo un set per conservare piu di un nodo adiacente, per comodità nei test il
         //prof ha consigliato di usare una HashSet
         Set<GraphNode<L>> adjacent = new HashSet<>();
         //scorro tramite foreach tutti gli array list dentro a matrix
@@ -406,7 +406,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
         if(!this.isDirected())
             throw new UnsupportedOperationException("Questo e' un grafo non orientato");
-        //mi creo un set per conservare piu di un nodo adiacente, per comodita' nei test il
+        //mi creo un set per conservare piu di un nodo adiacente, per comodità nei test il
         //prof ha consigliato di usare una HashSet
         Set<GraphNode<L>> predecessor = new HashSet<>();
         //scorro tramite foreach tutti gli array list dentro a matrix
