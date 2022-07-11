@@ -65,7 +65,6 @@ public class BellmanFordShortestPathComputer<L>
     @Override
     public void computeShortestPathsFrom(GraphNode<L> sourceNode)
     {
-        // TODO implementare
         if(sourceNode == null)
             throw new NullPointerException("Il nodo passato e' nullo.");
         if(!graph.getNodes().contains(sourceNode))
@@ -73,10 +72,17 @@ public class BellmanFordShortestPathComputer<L>
 
         //step 1
         //confronto ogni nodo del grafo con un nuovo nodo
+        //source sarà il nodo da scoprire
         for (GraphNode<L> source : this.getGraph().getNodes())
         {
-            //il nuovo nodo sorgente avrà distanza pari a 0
-            source.setFloatingPointDistance(0.0);
+            //il nuovo nodo sorgente avrà distanza pari a infinito
+            source.setFloatingPointDistance(Double.POSITIVE_INFINITY);
+            //se il nodo passato è uguale a quello da confrontare
+            //vuol dire che quello sarà a prescindere il nodo
+            //di partenza da cui inizia a calcolare il
+            //cammino minimo, quindi lo setto a 0.
+            if(sourceNode.equals(source))
+                sourceNode.setFloatingPointDistance(0.0);
         }
 
         //step2
