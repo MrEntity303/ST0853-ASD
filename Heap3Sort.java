@@ -32,9 +32,11 @@ public class Heap3Sort<E extends Comparable<E>> implements SortingAlgorithm<E> {
     @Override
     public SortingAlgorithmResult<E> sort(List<E> l) {
         dim = l.size();
-        for (int i = l.size() / 3; i >= 0; i--)
-            heapify(l, i);
 
+        this.buildMaxHeap(l);
+
+        //mette la radice come ultimo elemento dell' array e corregge
+        //di nuovo i valori del maxHeap
         for(dim=l.size()-1;dim>=0;dim--){
             swap(l, 0, dim);
             heapify(l,0);
@@ -42,7 +44,15 @@ public class Heap3Sort<E extends Comparable<E>> implements SortingAlgorithm<E> {
 
         return new SortingAlgorithmResult<>(l, count);
     }
-
+    /**
+     * Corregge i valori scambiandoli di posizione per tornare ad avere un maxheap.
+     *
+     * @param l
+     *                 array da ordinare.
+     *
+     * @param i
+     *                  root di un nodo.
+     */
     private void heapify(List<E> l, int i) {
         int max = i;
         if(this.getFirstChildNode(i) < dim && l.get(this.getFirstChildNode(i)).compareTo(l.get(max)) >= 0)
@@ -71,31 +81,79 @@ public class Heap3Sort<E extends Comparable<E>> implements SortingAlgorithm<E> {
     }
 
     /*
-     * // TODO inserire eventuali metodi privati di comodo per calcolare
-     * l'indice del primo, secondo e terzo di un nodo in posizione i. Si noti
+     * L'indice del primo, secondo e terzo di un nodo in posizione i. Si noti
      * che la posizione 0 è significativa e contiene sempre la radice dello
      * heap.
+     */
+
+    /**
+     * Restituisce il primo figlio
+     *
+     * @param pos
+     *                 posizione del elemento padre.
+     *
+     * @return  ritorna la posizione del figlio.
      */
     private int getFirstChildNode(int pos)
     {
         return (3*pos) + 1;
     }
 
+    /**
+     * Restituisce il secondo figlio
+     *
+     * @param pos
+     *                 posizione del elemento padre.
+     *
+     * @return  ritorna la posizione del figlio.
+     */
     private int getSecondChildNode(int pos)
     {
         return ((3*pos) + 1)+1;
     }
 
+    /**
+     * Restituisce il terzo figlio
+     *
+     * @param pos
+     *                 posizione del elemento padre.
+     *
+     * @return  ritorna la posizione del figlio.
+     */
     private int getThirdChildNode(int pos)
     {
         return ((3*pos) + 1)+2;
     }
 
+    /**
+     * Scambia gli elementi tramite le posizioni date
+     *
+     * @param l
+     *                 lista di elementi su cui effettuare lo scambio.
+     *
+     * @param i
+     *                  posizione del primo elemento da scambiare.
+     *
+     * @param j
+     *                  posizione del secondo elemento da scambiare.
+     */
     private void swap(List<E> l, int i, int j)
     {
         E element = l.get(i); //posizione i-esima
         l.set(i, l.get(j)); //sostituisce elemento gli elementi
         l.set(j, element); //esegue il set dell'elemento di appoggio
+    }
+
+    /**
+     * Mette gli elementi in ordine in modo che ci sia un maxHeap di partenza.
+     *
+     * @param l
+     *                 array da ordinare.
+     */
+    private void buildMaxHeap(List<E> l)
+    {
+        for (int i = l.size() / 3; i >= 0; i--)
+            heapify(l, i);
     }
 
 }
