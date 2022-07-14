@@ -76,16 +76,17 @@ public class BellmanFordShortestPathComputer<L>
         //step 1
         //confronto ogni nodo del grafo con un nuovo nodo
         //source sarà il nodo da scoprire
-        for (GraphNode<L> source : this.getGraph().getNodes())
+        for (GraphNode<L> next : this.getGraph().getNodes())
         {
             //il nuovo nodo sorgente avrà distanza pari a infinito
-            source.setFloatingPointDistance(Double.POSITIVE_INFINITY);
+            next.setFloatingPointDistance(Double.POSITIVE_INFINITY);
+            next.setPrevious(null);
             //se il nodo passato è uguale a quello da confrontare
             //vuol dire che quello sarà a prescindere il nodo
             //di partenza da cui inizia a calcolare il
             //cammino minimo, quindi lo setto a 0.
-            if(sourceNode.equals(source))
-                sourceNode.setFloatingPointDistance(0.0);
+            if(sourceNode.equals(next))
+                next.setFloatingPointDistance(0.0);
         }
 
         //step2
@@ -99,15 +100,14 @@ public class BellmanFordShortestPathComputer<L>
              * copio la distanza di node1 + il peso del suo arco
              * nella distanza di node2
              * */
-            for (GraphEdge<L> newEdge : graph.getEdges())
+            for (GraphEdge<L> newEdge : this.graph.getEdges())
             {
-                GraphNode<L> node1 = newEdge.getNode1();
-                GraphNode<L> node2 = newEdge.getNode2();
-                if (node2.getFloatingPointDistance() > node1.getFloatingPointDistance()
+                if (newEdge.getNode2().getFloatingPointDistance() > newEdge.getNode1().getFloatingPointDistance()
                         + newEdge.getWeight())
                 {
-                    node2.setFloatingPointDistance(node1.getFloatingPointDistance()
+                    newEdge.getNode2().setFloatingPointDistance(newEdge.getNode1().getFloatingPointDistance()
                             + newEdge.getWeight());
+                    newEdge.getNode2().setPrevious(newEdge.getNode1());
                 }
             }
         }
@@ -124,7 +124,7 @@ public class BellmanFordShortestPathComputer<L>
                 throw new IllegalStateException("Il grafo presenta un ciclo con peso negativo.");
 
 
-       /*for (GraphEdge<L> edge:  graph.getEdges())
+        /*for (GraphEdge<L> edge:  graph.getEdges())
         {
             if (edge.getWeight() < 0 && !edge.hasWeight())
                 throw new IllegalStateException("Ciclo con peso negativo.");
@@ -166,21 +166,16 @@ public class BellmanFordShortestPathComputer<L>
 
         List<GraphEdge<L>> edgeList = new ArrayList<>();
 
-        /*
+
         while (targetNode.getPrevious() != null) {
             // aggiungo l'arco che lo collega al precedente
-            System.out.println("Non c'è niente");
             edgeList.add(graph.getEdge(targetNode.getPrevious(), targetNode));
-            if (targetNode.equals(this.getLastSource()))
+            if (!targetNode.equals(this.getLastSource()))
+                // il targetNode diventa il suo previous e continuo finché non ne ha più
+                targetNode = targetNode.getPrevious();
+            else
                 break;
-
-            // il targetNode diventa il suo previous e continuo finché non ne ha più
-            targetNode = targetNode.getPrevious();
         }
-*/
-
-       // Set<GraphNode<L>> toRetrun = graph.getNodes();
-
 //          Dato che il target si trova alla fine e inizio a scorrere da li,
 //          faccio il reverse dell'array per avere gli archi ordinati dal primo all'ultimo
         Collections.reverse(edgeList);
