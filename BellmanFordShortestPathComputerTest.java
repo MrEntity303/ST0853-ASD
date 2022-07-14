@@ -272,4 +272,60 @@ class BellmanFordShortestPathComputerTest {
 
     // TODO inserire ulteriori test con esempi di grafi diversi
 
+    @Test
+    final void testComputeShortestPathsFrom1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("a");
+        GraphNode<String> nodeB = new GraphNode<>("b");
+        GraphNode<String> nodeC = new GraphNode<>("c");
+        graph.addNode(nodeA);
+        graph.addNode(nodeB);
+        graph.addNode(nodeC);
+        GraphEdge<String> ab = new GraphEdge<>(nodeA, nodeB, true, 3);
+        GraphEdge<String> bc = new GraphEdge<>(nodeB, nodeC, true, -8);
+        GraphEdge<String> ca = new GraphEdge<>(nodeC, nodeA, true, 2);
+        graph.addEdge(ab);
+        graph.addEdge(bc);
+        graph.addEdge(ca);
+        BellmanFordShortestPathComputer<String> c = new BellmanFordShortestPathComputer<>(graph);
+
+        assertThrows(NullPointerException.class, () -> c.computeShortestPathsFrom(null));
+        assertThrows(IllegalArgumentException.class, () -> c.computeShortestPathsFrom(new GraphNode<>("g")));
+        assertThrows(IllegalStateException.class, () -> c.computeShortestPathsFrom(nodeA));
+
+
+        assertThrows(NullPointerException.class, () -> c.computeShortestPathsFrom(null));
+        assertThrows(IllegalArgumentException.class, () -> c.computeShortestPathsFrom(new GraphNode<>("h")));
+        assertThrows(IllegalStateException.class, () -> c.computeShortestPathsFrom(nodeB));
+
+
+    }
+
+    @Test
+    final void testGetShortestPathTo1()
+    {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("a");
+        GraphNode<String> nodeB = new GraphNode<>("b");
+        graph.addNode(nodeA);
+        graph.addNode(nodeB);
+        GraphEdge<String> edge1 = new GraphEdge<>(nodeA, nodeB, true, 10);
+        graph.addEdge(edge1);
+        GraphEdge<String> edge2 = new GraphEdge<>(nodeB, nodeA, true, 4);
+        graph.addEdge(edge2);
+
+
+        SingleSourceShortestPathComputer<String> calc = new BellmanFordShortestPathComputer<>(graph);
+
+        assertThrows(IllegalStateException.class, () -> calc.getShortestPathTo(nodeA));
+        calc.computeShortestPathsFrom(nodeA);
+        assertThrows(NullPointerException.class, () -> calc.getShortestPathTo(null));
+        assertThrows(IllegalArgumentException.class, () -> calc.getShortestPathTo(new GraphNode<>("d")));
+
+        List<GraphEdge<String>> shortestPathToB = calc.getShortestPathTo(nodeB);
+        List<GraphEdge<String>> edgeList = new ArrayList<>();
+        edgeList.add(edge1);
+        assertEquals(edgeList, shortestPathToB);
+    }
+
 }
