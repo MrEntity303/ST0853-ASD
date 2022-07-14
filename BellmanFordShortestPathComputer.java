@@ -1,7 +1,9 @@
 package it.unicam.cs.asdl2122.pt1;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 //TODO completare gli import necessari
 
 //ATTENZIONE: è vietato includere import a pacchetti che non siano della Java SE
@@ -28,18 +30,18 @@ public class BellmanFordShortestPathComputer<L>
     /**
      * Crea un calcolatore di cammini minimi a sorgente singola per un graph
      * orientato e pesato.
-     * 
+     *
      * @param graph
      *                  il graph su cui opera il calcolatore di cammini minimi
      * @throws NullPointerException
      *                                      se il graph passato è nullo
-     * 
+     *
      * @throws IllegalArgumentException
      *                                      se il graph passato è vuoto
-     * 
+     *
      * @throws IllegalArgumentException
      *                                      se il graph passato non è diretto
-     * 
+     *
      * @throws IllegalArgumentException
      *                                      se il graph passato non è pesato,
      *                                      cioè esiste almeno un arco il cui
@@ -67,6 +69,7 @@ public class BellmanFordShortestPathComputer<L>
     {
         if(sourceNode == null)
             throw new NullPointerException("Il nodo passato e' nullo.");
+
         if(!graph.getNodes().contains(sourceNode))
             throw new IllegalArgumentException("Il nodo passato non esiste.");
 
@@ -115,17 +118,20 @@ public class BellmanFordShortestPathComputer<L>
              * se la distanza di node1 + il peso del suo nuovo arco
              * e' minore della distanza di node2,
              * ci sarà un ciclo con peso negativo
-             *
              * */
         for (GraphEdge<L> newEdge: this.getGraph().getEdges())
-        {
-            GraphNode<L> node1 = newEdge.getNode1();
-            GraphNode<L> node2 = newEdge.getNode2();
-            if((node1.getFloatingPointDistance() + newEdge.getWeight()) < node2.getFloatingPointDistance())
+            if((newEdge.getNode1().getFloatingPointDistance() + newEdge.getWeight()) < newEdge.getNode2().getFloatingPointDistance())
                 throw new IllegalStateException("Il grafo presenta un ciclo con peso negativo.");
-        }
+
+
+       /*for (GraphEdge<L> edge:  graph.getEdges())
+        {
+            if (edge.getWeight() < 0 && !edge.hasWeight())
+                throw new IllegalStateException("Ciclo con peso negativo.");
+        }*/
         //il calcolo è avvenuto
         this.isComputed = true;
+        this.lastSource = sourceNode;
     }
 
 
@@ -152,15 +158,33 @@ public class BellmanFordShortestPathComputer<L>
         if(targetNode == null)
             throw new NullPointerException("Il nodo passato è nullo.");
 
-        if(!this.getGraph().getNodes().contains(targetNode))
+        if(!this.graph.getNodes().contains(targetNode))
             throw new IllegalArgumentException("Il nodo passato non esiste.");
 
-        if(this.getLastSource() == null)
+        if(!isComputed())
             throw new IllegalStateException("Il calcolo non e' stato eseguito.");
 
+        List<GraphEdge<L>> edgeList = new ArrayList<>();
 
-        return null;
+        /*
+        while (targetNode.getPrevious() != null) {
+            // aggiungo l'arco che lo collega al precedente
+            System.out.println("Non c'è niente");
+            edgeList.add(graph.getEdge(targetNode.getPrevious(), targetNode));
+            if (targetNode.equals(this.getLastSource()))
+                break;
+
+            // il targetNode diventa il suo previous e continuo finché non ne ha più
+            targetNode = targetNode.getPrevious();
+        }
+*/
+
+       // Set<GraphNode<L>> toRetrun = graph.getNodes();
+
+//          Dato che il target si trova alla fine e inizio a scorrere da li,
+//          faccio il reverse dell'array per avere gli archi ordinati dal primo all'ultimo
+        Collections.reverse(edgeList);
+        return edgeList;
     }
-
     // TODO inserire eventuali metodi privati per l'implementazione
 }
