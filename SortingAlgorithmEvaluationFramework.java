@@ -51,7 +51,7 @@ public class SortingAlgorithmEvaluationFramework {
         // Inserisco gli algoritmi che voglio testare
         algs.add(new Heap3Sort<Integer>());
         algs.add(new AVLTreeSort<Integer>());
-        algs.add(new CountingSort<Integer>());
+        algs.add(new CountingSort());
         // Creo una lista di liste per contenere le copie delle liste da
         // ordinare, una per ogni algoritmo
         List<List<Integer>> lists = new ArrayList<List<Integer>>();
