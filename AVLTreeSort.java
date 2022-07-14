@@ -19,7 +19,7 @@ public class AVLTreeSort<E extends Comparable<E>>
 
     public SortingAlgorithmResult<E> sort(List<E> l) {
         //creo un avl tree vuoto
-        AVLTree<E> avlTree= new AVLTree<E>();
+        AVLTree<E> avlTree= new AVLTree<>();
         int compareCounter = 0;
 
         /*
@@ -30,10 +30,8 @@ public class AVLTreeSort<E extends Comparable<E>>
         for (E element: l)
             compareCounter += avlTree.insert(element);
 
-        SortingAlgorithmResult <E> result = new SortingAlgorithmResult<E>(avlTree.inOrderVisit(), compareCounter);
-
         //ritorno il numero di confronti e lista ottenuta
-        return result;
+        return new SortingAlgorithmResult<>(avlTree.inOrderVisit(), compareCounter);
     }
 
     public String getName() {
