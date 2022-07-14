@@ -1,6 +1,8 @@
 package it.unicam.cs.asdl2122.pt1;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 //TODO completare gli import necessari
 
 //ATTENZIONE: è vietato includere import a pacchetti che non siano della Java SE
@@ -75,7 +77,7 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
             throw new IllegalArgumentException();
         for (GraphEdge<L> newEdge: g.getEdges())
         {
-            if(newEdge.hasWeight())
+            if(!newEdge.hasWeight())
                 throw new IllegalArgumentException();
         }
         //costruisco predecessorMatrix e costMatrix con il numero
@@ -83,6 +85,20 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
         this.predecessorMatrix = new int [g.nodeCount()][g.nodeCount()];
         this.costMatrix = new double [g.nodeCount()] [g.nodeCount()];
         this.graph = g;
+        this.solved = false;
+
+        for(int i = 0; i < getGraph().getNodes().size(); i++) {
+            for(int j = 0; j < getGraph().getNodes().size(); j++) {
+                predecessorMatrix[i][j] = -1;
+            }
+        }
+
+        for(int i = 0; i < getGraph().getNodes().size(); i++) {
+            for(int j = 0; j < getGraph().getNodes().size(); j++) {
+                costMatrix[i][j] = Double.POSITIVE_INFINITY;
+            }
+            costMatrix[i][i] = 0;
+        }
     }
 
     /**
@@ -96,9 +112,9 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      *                                   ad esempio se il grafo contiene cicli
      *                                   di peso negativo.
      */
-    public void computeShortestPaths() {
-        // TODO implementare
-
+    public void computeShortestPaths()
+    {
+        //TODO implement
     }
 
     /**
@@ -148,10 +164,33 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      *
      *
      */
-    public List<GraphEdge<L>> getShortestPath(GraphNode<L> sourceNode,
-            GraphNode<L> targetNode) {
-        // TODO implementare
-        return null;
+    public List<GraphEdge<L>> getShortestPath(GraphNode<L> sourceNode, GraphNode<L> targetNode)
+    {
+        if(sourceNode == null || targetNode == null)
+            throw new NullPointerException("Uno dei nodi e' nullo");
+        if(this.getGraph().getNode(sourceNode)== null || this.getGraph().getNode(targetNode) == null)
+            throw new IllegalArgumentException("Uno dei 2 nodi non esiste!");
+        if(!this.isComputed())
+            throw new IllegalStateException("Non e' stato eseguito il calcolo dei cammini minimi!");
+
+        List<GraphEdge<L>> listEdge = new ArrayList<>();
+
+        //ritorno una lista vuota se il nodoSorgente è il nodoTarget
+        if(sourceNode.equals(targetNode))
+            return listEdge;
+
+        //creo la lista di archi che collegano il nodoSorgente con il nodoTarget
+        for(GraphEdge<L> edge : this.getGraph().getEdges())
+        {
+            if(edge.getNode1().equals(sourceNode) && edge.getNode2().equals(targetNode))
+                listEdge.add(edge);
+        }
+
+        //Viene restituito null se il nodo target non ne raggiungibile dal nodo sorgente
+        if(listEdge.size()==0)
+            return null;
+
+        return listEdge;
     }
 
     /**
@@ -181,10 +220,30 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      *
      *
      */
-    public double getShortestPathCost(GraphNode<L> sourceNode,
-            GraphNode<L> targetNode) {
-        // TODO implementare
-        return 0.0;
+    public double getShortestPathCost(GraphNode<L> sourceNode, GraphNode<L> targetNode) {
+        if(sourceNode == null || targetNode == null)
+            throw new NullPointerException("Uno dei 2 nodi e' nullo!");
+        if(this.getGraph().getNode(sourceNode)== null || this.getGraph().getNode(targetNode) == null)
+            throw new IllegalArgumentException("Uno dei 2 nodi non esiste!");
+        if(!this.isComputed())
+            throw new IllegalStateException("Non e' stato eseguito il calcolo dei cammini minimi!");
+
+        //ritorna 0.0 se il nodoSorgente è il nodoTarget
+        if(sourceNode.equals(targetNode))
+            return 0.0;
+
+        //il nodoTarget non è raggiungibile dal nodoSorgente
+        if(this.getShortestPath(sourceNode, targetNode) == null)
+            return Double.POSITIVE_INFINITY;
+
+        //somma dei cammini minimi dal nodoSorgente al nodoTarget
+        double costEdge = 0.0;
+        for (GraphEdge<L> edge : this.getShortestPath(sourceNode, targetNode))
+        {
+                costEdge = costEdge + edge.getWeight();
+        }
+
+        return costEdge;
     }
 
     /**
@@ -229,4 +288,5 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
     }
 
     // TODO inserire eventuali metodi privati per fini di implementazione
+
 }
