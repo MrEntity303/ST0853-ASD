@@ -3,7 +3,6 @@ package it.unicam.cs.asdl2122.pt1;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 //ATTENZIONE: è vietato includere import a pacchetti che non siano della Java SE
 
@@ -147,7 +146,6 @@ public class BellmanFordShortestPathComputer<L>
 
     @Override
     public List<GraphEdge<L>> getShortestPathTo(GraphNode<L> targetNode) {
-        // TODO implementare
         if(targetNode == null)
             throw new NullPointerException("Il nodo passato è nullo.");
 
