@@ -277,27 +277,27 @@ class BellmanFordShortestPathComputerTest {
         Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
         GraphNode<String> nodeA = new GraphNode<>("a");
         GraphNode<String> nodeB = new GraphNode<>("b");
-        GraphNode<String> nodeC = new GraphNode<>("c");
         graph.addNode(nodeA);
         graph.addNode(nodeB);
-        graph.addNode(nodeC);
-        GraphEdge<String> ab = new GraphEdge<>(nodeA, nodeB, true, 3);
-        GraphEdge<String> bc = new GraphEdge<>(nodeB, nodeC, true, -8);
-        GraphEdge<String> ca = new GraphEdge<>(nodeC, nodeA, true, 2);
-        graph.addEdge(ab);
-        graph.addEdge(bc);
-        graph.addEdge(ca);
-        BellmanFordShortestPathComputer<String> c = new BellmanFordShortestPathComputer<>(graph);
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 7));
 
-        assertThrows(NullPointerException.class, () -> c.computeShortestPathsFrom(null));
-        assertThrows(IllegalArgumentException.class, () -> c.computeShortestPathsFrom(new GraphNode<>("g")));
-        assertThrows(IllegalStateException.class, () -> c.computeShortestPathsFrom(nodeA));
+        SingleSourceShortestPathComputer<String> alg = new BellmanFordShortestPathComputer<>(graph);
+        assertThrows(NullPointerException.class, () -> alg.computeShortestPathsFrom(null));
+        assertThrows(IllegalArgumentException.class, () -> alg.computeShortestPathsFrom(new GraphNode<>("h")));
 
+        //mi creo un arco da aggiungere e rimuovere
+        GraphEdge<String> edge = new GraphEdge<>(nodeB, nodeA, true, -9);
+        graph.addEdge(edge);
 
-        assertThrows(NullPointerException.class, () -> c.computeShortestPathsFrom(null));
-        assertThrows(IllegalArgumentException.class, () -> c.computeShortestPathsFrom(new GraphNode<>("h")));
-        assertThrows(IllegalStateException.class, () -> c.computeShortestPathsFrom(nodeB));
+        assertThrows(IllegalStateException.class, () -> alg.computeShortestPathsFrom(nodeA));
+        graph.removeEdge(edge);
 
+        edge = new GraphEdge<>(nodeB, nodeA, true, 4);
+        graph.addEdge(edge);
+
+        assertFalse(alg.isComputed());
+        alg.computeShortestPathsFrom(nodeA);
+        assertTrue(alg.isComputed());
 
     }
     @Test
