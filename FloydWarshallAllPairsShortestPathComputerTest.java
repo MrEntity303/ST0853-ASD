@@ -211,6 +211,229 @@ class FloydWarshallAllPairsShortestPathComputerTest {
         assertEquals(-1, a.getPredecessorMatrix()[0][2]);
     }
 
-    // TODO inserire ulteriori test con esempi di grafi diversi
+
+
+
+    @Test
+    final void testFloydWarshallAllPairsShortestPathComputer1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true));
+        // null
+        assertThrows(NullPointerException.class,
+                () -> new FloydWarshallAllPairsShortestPathComputer<String>(
+                        null));
+        // peso
+        assertThrows(IllegalArgumentException.class,
+                () -> new FloydWarshallAllPairsShortestPathComputer<>(graph));
+    }
+
+    @Test
+    final void testComputeShortestPaths1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, -8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true, -2));
+        FloydWarshallAllPairsShortestPathComputer<String> a = new FloydWarshallAllPairsShortestPathComputer<>(
+                graph);
+
+        assertThrows(IllegalStateException.class,
+                () -> a.computeShortestPaths());
+
+    }
+
+    @Test
+    final void testIsComputed1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true, -2));
+        FloydWarshallAllPairsShortestPathComputer<String> a = new FloydWarshallAllPairsShortestPathComputer<>(
+                graph);
+        assertFalse(a.isComputed());
+        a.computeShortestPaths();
+        assertTrue(a.isComputed());
+    }
+
+    @Test
+    final void testGetGraph1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true, -2));
+        FloydWarshallAllPairsShortestPathComputer<String> a = new FloydWarshallAllPairsShortestPathComputer<>(
+                graph);
+        assertEquals(a.getGraph(), graph);
+    }
+
+    @Test
+    final void testGetShortestPath1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true, -2));
+        FloydWarshallAllPairsShortestPathComputer<String> a = new FloydWarshallAllPairsShortestPathComputer<>(
+                graph);
+        a.computeShortestPaths();
+        List<GraphEdge<String>> getShortestPath = new ArrayList<>();
+        getShortestPath.add(new GraphEdge<>(nodeB, nodeC, true, 8));
+        getShortestPath.add(new GraphEdge<>(nodeC, nodeD, true, -3));
+        assertEquals(a.getShortestPath(nodeB, nodeD), getShortestPath);
+        getShortestPath.add(new GraphEdge<>(nodeA, nodeB, true, 3));
+        assertNotEquals(a.getShortestPath(nodeB, nodeD), getShortestPath);
+    }
+
+    @Test
+    final void testGetShortestPathCost1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true, -2));
+        FloydWarshallAllPairsShortestPathComputer<String> a = new FloydWarshallAllPairsShortestPathComputer<>(
+                graph);
+        a.computeShortestPaths();
+        assertEquals(a.getShortestPathCost(nodeB, nodeD), 5);
+    }
+
+    @Test
+    final void testPrintPath1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true, -2));
+        FloydWarshallAllPairsShortestPathComputer<String> a = new FloydWarshallAllPairsShortestPathComputer<>(
+                graph);
+        a.computeShortestPaths();
+        List<GraphEdge<String>> getShortestPath = new ArrayList<>();
+        getShortestPath.add(new GraphEdge<>(nodeB, nodeC, true, 8));
+        getShortestPath.add(new GraphEdge<>(nodeC, nodeD, true, -3));
+        assertEquals(a.printPath(a.getShortestPath(nodeB, nodeD)),
+                a.printPath(getShortestPath));
+    }
+
+    @Test
+    final void testGetCostMatrix1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true, -2));
+        FloydWarshallAllPairsShortestPathComputer<String> a = new FloydWarshallAllPairsShortestPathComputer<>(
+                graph);
+        a.computeShortestPaths();
+        assertEquals(a.getCostMatrix()[3][3], 0);
+        assertEquals(a.getCostMatrix()[1][2], 8);
+    }
+
+    @Test
+    final void testGetPredecessorMatrix1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true, -2));
+        FloydWarshallAllPairsShortestPathComputer<String> a = new FloydWarshallAllPairsShortestPathComputer<>(
+                graph);
+        a.computeShortestPaths();
+        assertEquals(-1, a.getPredecessorMatrix()[0][0]);
+    }
 
 }
