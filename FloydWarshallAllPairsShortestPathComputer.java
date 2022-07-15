@@ -1,9 +1,8 @@
 package it.unicam.cs.asdl2122.pt1;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-//TODO completare gli import necessari
 
 //ATTENZIONE: è vietato includere import a pacchetti che non siano della Java SE
 
@@ -87,18 +86,13 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
         this.graph = g;
         this.solved = false;
 
-        for(int i = 0; i < getGraph().getNodes().size(); i++) {
-            for(int j = 0; j < getGraph().getNodes().size(); j++) {
-                predecessorMatrix[i][j] = -1;
-            }
-        }
+        this.constructCostMatrix();
 
-        for(int i = 0; i < getGraph().getNodes().size(); i++) {
-            for(int j = 0; j < getGraph().getNodes().size(); j++) {
-                costMatrix[i][j] = Double.POSITIVE_INFINITY;
-            }
-            costMatrix[i][i] = 0;
-        }
+        this.constructPredecessorMatrix();
+
+
+
+
     }
 
     /**
@@ -114,7 +108,33 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
      */
     public void computeShortestPaths()
     {
-        //TODO implement
+        //inserisco nella matrice i valori con archi diretti al nodo sorgente
+        for (GraphEdge<L> edge : this.getGraph().getEdges()) {
+            this.getCostMatrix()[this.getGraph().getNodeIndexOf(edge.getNode1().getLabel())][this.getGraph().getNodeIndexOf(edge.getNode2().getLabel())] = edge.getWeight();
+            this.getPredecessorMatrix()[this.getGraph().getNodeIndexOf(edge.getNode1().getLabel())][this.getGraph().getNodeIndexOf(edge.getNode2().getLabel())] = this.getGraph().getNodeIndexOf(edge.getNode1().getLabel());
+        }
+
+        //costruisco e inserisco in contemporanea come specificato dal algoritmo di Floyd
+        //la matrice costMatrix e PredecessorMatrix
+        for (int k = 1; k < this.getGraph().nodeCount(); k++)
+            for(int i = 1; i < this.getGraph().nodeCount(); i++)
+                for (int j = 1; j < this.getGraph().nodeCount(); j++)
+                    if(this.getCostMatrix()[i][j] > this.getCostMatrix()[i][k] + this.getCostMatrix()[k][j])
+                    {
+                        this.getCostMatrix()[i][j] = this.getCostMatrix()[i][k] + this.getCostMatrix()[k][j];
+                        this.getPredecessorMatrix()[i][j] = this.getPredecessorMatrix()[k][j];
+                    }
+
+        //faccio la somma dei pesi del grafo, se il peso risulta negativo
+        //scatta illegalStateException()
+        double integer = 0;
+        for (GraphEdge<L> edge : this.getGraph().getEdges()) {
+            integer = integer + edge.getWeight();
+        }
+        if(integer<0)
+            throw new IllegalStateException("Il peso e' negativo");
+
+        this.solved = true;
     }
 
     /**
@@ -180,14 +200,23 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
             return listEdge;
 
         //creo la lista di archi che collegano il nodoSorgente con il nodoTarget
-        for(GraphEdge<L> edge : this.getGraph().getEdges())
+        GraphEdge<L> edge = new GraphEdge<>( this.getGraph().getNode(targetNode),this.getGraph().getNode(sourceNode), true);// = new GraphEdge<>(this.getGraph().getNode(sourceNode), this.getGraph().getNode(targetNode));
+        int indexSource = this.getGraph().getNodeIndexOf(sourceNode.getLabel());
+        int indexTarget = this.getGraph().getNodeIndexOf(targetNode.getLabel());
+        int indexApp;
+        while(!edge.getNode1().equals(sourceNode))
         {
-            if(edge.getNode1().equals(sourceNode) && edge.getNode2().equals(targetNode))
-                listEdge.add(edge);
+            indexApp = this.getPredecessorMatrix()[indexSource][indexTarget];
+            edge = this.getGraph().getEdge(this.getGraph().getNode(indexApp), this.getGraph().getNode(indexTarget));
+            listEdge.add(edge);
+            indexTarget = indexApp;
         }
 
+        //inverto l'ordine dei archi all'interno della lista
+        Collections.reverse(listEdge);
+
         //Viene restituito null se il nodo target non ne raggiungibile dal nodo sorgente
-        if(listEdge.size()==0)
+        if(listEdge.isEmpty())
             return null;
 
         return listEdge;
@@ -233,30 +262,21 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
             return 0.0;
 
         //il nodoTarget non è raggiungibile dal nodoSorgente
-        if(this.getShortestPath(sourceNode, targetNode) == null)
+        if((this.getShortestPath(sourceNode, targetNode) == null))
             return Double.POSITIVE_INFINITY;
 
+        //System.out.println("Cost Edge");
         //somma dei cammini minimi dal nodoSorgente al nodoTarget
         double costEdge = 0.0;
         for (GraphEdge<L> edge : this.getShortestPath(sourceNode, targetNode))
         {
-                costEdge = costEdge + edge.getWeight();
+            costEdge = costEdge + edge.getWeight();
         }
 
         return costEdge;
     }
 
-    /**
-     * Genera una stringa di descrizione di un path riportando i nodi
-     * attraversati e i pesi degli archi. Nel caso di cammino vuoto genera solo
-     * la stringa {@code "[ ]"}.
-     *
-     * @param path
-     *                 un cammino minimo
-     * @return una stringa di descrizione del cammino minimo
-     * @throws NullPointerException
-     *                                  se il cammino passato è nullo
-     */
+
     public String printPath(List<GraphEdge<L>> path) {
         if (path == null)
             throw new NullPointerException(
@@ -287,6 +307,31 @@ public class FloydWarshallAllPairsShortestPathComputer<L> {
         return predecessorMatrix;
     }
 
-    // TODO inserire eventuali metodi privati per fini di implementazione
+    /**
+     * Costruisco la matrice dei predecessori mettendo tutti i valori a -1.
+     */
+    private void constructPredecessorMatrix()
+    {
+        for(int i = 0; i < getGraph().getNodes().size(); i++) {
+            for(int j = 0; j < getGraph().getNodes().size(); j++) {
+                this.getPredecessorMatrix()[i][j] = -1;
+            }
+        }
+    }
+
+    /**
+     * Costruisco la matrice dei costi mettendo tutti i valori a 0 sulla diagonale
+     * in quanto corrispondono a se stessi, il resto dei valori è inizializzato con
+     * {@code Double.POSITIVE_INFINITY}.
+     */
+    private void constructCostMatrix()
+    {
+        for(int i = 0; i < getGraph().getNodes().size(); i++) {
+            for(int j = 0; j < getGraph().getNodes().size(); j++) {
+                this.getCostMatrix()[i][j] = Double.POSITIVE_INFINITY;
+            }
+            this.getCostMatrix()[i][i] = 0;
+        }
+    }
 
 }
