@@ -102,6 +102,7 @@ public class BellmanFordShortestPathComputer<L>
                 }
             }
         }
+
        //controllo la presenza di un ciclo negativo
         for (GraphEdge<L> newEdge: this.getGraph().getEdges())
             if((newEdge.getNode1().getFloatingPointDistance() + newEdge.getWeight()) <
