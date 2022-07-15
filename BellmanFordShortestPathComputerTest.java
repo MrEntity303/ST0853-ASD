@@ -300,10 +300,71 @@ class BellmanFordShortestPathComputerTest {
 
 
     }
+    @Test
+    final void testIsComputed1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 2));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 7));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeA, true, -8));
+        BellmanFordShortestPathComputer<String> alg = new BellmanFordShortestPathComputer<>(
+                graph);
+        assertFalse(alg.isComputed());
+        alg.computeShortestPathsFrom(nodeA);
+        assertTrue(alg.isComputed());
+    }
+    @Test
+    final void testGetLastSource1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 2));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeA, true, -3));
+        BellmanFordShortestPathComputer<String> alg = new BellmanFordShortestPathComputer<>(
+                graph);
+        assertThrows(IllegalStateException.class, () -> alg.getLastSource());
+        alg.computeShortestPathsFrom(nodeA);
+        assertEquals(nodeA, alg.getLastSource());
+    }
+    @Test
+    final void testGetGraph1() {
+        Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
+        GraphNode<String> nodeA = new GraphNode<>("A");
+        graph.addNode(nodeA);
+        GraphNode<String> nodeB = new GraphNode<>("B");
+        graph.addNode(nodeB);
+        GraphNode<String> nodeC = new GraphNode<>("C");
+        graph.addNode(nodeC);
+        GraphNode<String> nodeD = new GraphNode<>("D");
+        graph.addNode(nodeD);
+
+
+        graph.addEdge(new GraphEdge<>(nodeA, nodeB, true, 6));
+        graph.addEdge(new GraphEdge<>(nodeB, nodeC, true, 8));
+        graph.addEdge(new GraphEdge<>(nodeC, nodeD, true, -3));
+        graph.addEdge(new GraphEdge<>(nodeD, nodeA, true, -2));
+        BellmanFordShortestPathComputer<String> alg = new BellmanFordShortestPathComputer<>(
+                graph);
+        alg.computeShortestPathsFrom(nodeA);
+        assertEquals(graph, alg.getGraph());
+    }
 
     @Test
-    final void testGetShortestPathTo1()
-    {
+    final void testGetShortestPathTo1() {
         Graph<String> graph = new AdjacencyMatrixDirectedGraph<>();
         GraphNode<String> nodeA = new GraphNode<>("a");
         GraphNode<String> nodeB = new GraphNode<>("b");
@@ -327,5 +388,4 @@ class BellmanFordShortestPathComputerTest {
         edgeList.add(edge1);
         assertEquals(edgeList, shortestPathToB);
     }
-
 }

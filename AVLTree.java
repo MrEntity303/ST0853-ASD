@@ -389,8 +389,8 @@ public class AVLTree<E extends Comparable<E>> {
         public AVLTreeNode(E el, AVLTreeNode parent) {
             this.el = el;
             this.count = 1;
-            this.left = null;//sinistra
-            this.right = null;//destra
+            this.left = null;
+            this.right = null;
             this.parent = parent;
             this.height = 0;
         }
@@ -535,7 +535,7 @@ public class AVLTree<E extends Comparable<E>> {
          * @return il fattore di bilanciamento di questo nodo.
          */
         public int getBalanceFactor() {
-            //Se il nodo è foglia fattore 0
+            //Se il nodo è foglia fattore il fattore di bilanciamento è 0
             if (this.isLeaf()) {
                 return 0;
             }
@@ -543,11 +543,12 @@ public class AVLTree<E extends Comparable<E>> {
             if (this.getLeft() != null && this.getRight() == null) {
                 return this.getLeft().getHeight() + 1;
             }
-            //Se esiste figlio destro ma non sisnistro allora il fattore è l'altezza del figlio sinistro moltiplicato per -1 e poi sommato 1
+            //Se esiste figlio destro ma non il sinistro allora il fattore di
+            // bilanciamento è l'altezza del figlio destro + 1, moltiplicato per -1
             if (this.getRight() != null && this.getLeft() == null) {
                 return (this.getRight().getHeight() + 1) * -1;
             }
-            //Se esistono entrambi i figli allroa è l'altezza figlio sinistro - altezza figlio destro
+            //Se esistono entrambi i figli allora è l'altezza figlio sinistro - altezza figlio destro
             return this.getLeft().getHeight() - this.getRight().getHeight();
         }
 
@@ -560,10 +561,10 @@ public class AVLTree<E extends Comparable<E>> {
          */
         public boolean isBalanced() {
             int fattoreBilanciamento = this.getBalanceFactor();
-            //Se il fattore di bilanciamento è compreso tra -1 e 1 allora facciamo i vari check,
-            //sennò è inutile andare a vedere i figli se questo nodo è già sbilanciato
-            //quindi in caso negativo ritorniamo false direttamente
-            //Da notare che si effettuano chiamate ricorsive al metodo isBalanced nei figli
+            //Se il fattore di bilanciamento è compreso tra -1 e 1 allora facciamo i vari controlli,
+            //altrimenti è inutile andare a vedere i figli se questo nodo è già sbilanciato
+            //quindi in caso negativo ritorniamo direttamente false
+            //si effettuano chiamate ricorsive al metodo isBalanced nei figli
             if (fattoreBilanciamento >= -1 && fattoreBilanciamento <= 1) {
                 AVLTreeNode left = this.getLeft();
                 AVLTreeNode right = this.getRight();
@@ -777,7 +778,6 @@ public class AVLTree<E extends Comparable<E>> {
             }
             int count = 0;
             if(this.getEl().compareTo(el) < 0)
-            {
                 if(this.getRight() == null)
                 {
                     AVLTreeNode newNode = new AVLTreeNode(el);
@@ -876,7 +876,6 @@ public class AVLTree<E extends Comparable<E>> {
             rightChild.updateHeight();
 
             return rightChild;
-
         }
 
         private void scanningTree(AVLTreeNode node)
