@@ -270,7 +270,6 @@ class BellmanFordShortestPathComputerTest {
         assertEquals(pathE, alg.getShortestPathTo(nodeE));
     }
 
-    // TODO inserire ulteriori test con esempi di grafi diversi
 
     @Test
     final void testComputeShortestPathsFrom1() {
