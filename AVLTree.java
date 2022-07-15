@@ -177,8 +177,6 @@ public class AVLTree<E extends Comparable<E>> {
      * 
      */
     public AVLTreeNode getNodeOf(E el) {
-        // TODO implementare e usare il metodo corrispondente (search) in
-        // AVLTreeNode
         AVLTreeNode tmp;
         if(el == null)
             throw new NullPointerException();
@@ -196,7 +194,6 @@ public class AVLTree<E extends Comparable<E>> {
      *                                  se l'elemento {@code el} è null
      */
     public int getCount(E el) {
-        // TODO implementare e usare il metodo corrispondente in AVLTreeNode
         if(el == null)
             throw new NullPointerException();
         return this.getRoot().search(el) == null ? 0 : this.getRoot().search(el).getCount();
@@ -225,23 +222,6 @@ public class AVLTree<E extends Comparable<E>> {
      *         tenendo conto della loro molteplicità.
      */
     public List<E> inOrderVisit() {
-        // TODO implementare e usare il metodo corrispondente in AVLTreeNode
-//
-//        if (this.getRoot() == null)
-//                return null;
-//         List<E> lista = new ArrayList<E>();
-//
-//            /* first recur on left child */
-//            while(this.getRoot().getLeft().getEl() != null)
-//                lista.add(this.getRoot().getLeft().getEl());
-//            /* then print the data of node */
-//            //System.out.print(node.key + " ");
-//            lista.add(this.getRoot().getEl());
-//
-//            /* now recur on right child */
-//            while(this.getRoot().getRight().getEl() != null)
-//                lista.add(this.getRoot().getRight().getEl());
-//         return lista;
         List<E> array = new ArrayList<>();
         inOrderTraversal(this.getRoot(), array);
         return array;
@@ -771,76 +751,6 @@ public class AVLTree<E extends Comparable<E>> {
             this.scanningTree(tmp);
             this.rebalance(tmp);
             return count;
-            /*AVLTreeNode tmp = this.search(el);
-            if(tmp != null){
-                tmp.setCount(tmp.getCount() + 1);
-                return 0;
-            }
-            int count = 0;
-            if(this.getEl().compareTo(el) < 0)
-                if(this.getRight() == null)
-                {
-                    AVLTreeNode newNode = new AVLTreeNode(el);
-                    this.setRight(newNode);
-                    this.getRight().setParent(this);
-                    //this.getRight().setParent(null);
-                    AVLTreeNode x = rebalance(this.getRight());
-                    this.setRight(x);
-                    this.getRight().setParent(null);
-                }
-                else
-                {
-                    count = this.getRight().insert(el);
-                }
-            }
-
-            if(this.getEl().compareTo(el) > 0)
-            {
-                if(this.getLeft() == null)
-                {
-                    AVLTreeNode newNode = new AVLTreeNode(el);
-                    this.setLeft(newNode);
-                    this.getLeft().setParent(this);
-                    //this.getRight().setParent(null);
-                    AVLTreeNode x = rebalance(this.getLeft());
-                    this.setLeft(x);
-                    this.getLeft().setParent(null);
-                }
-                else
-                {
-                    this.getLeft().insert(el);
-                }
-            }
-
-            this.rebalance(this);
-            return count;
-*/
-//            int count = 0;
-//            AVLTreeNode tmp = this.search(el);
-//            if(tmp != null){
-//                tmp.setCount(tmp.getCount() + 1);
-//                return 0;
-//            }
-//
-//            tmp = this;
-//            while(tmp != null) {
-//                if(el.compareTo(tmp.getEl()) > 0 )
-//                    tmp = tmp.getRight();
-//                else
-//                    tmp = tmp.getLeft();
-//                count++;
-//            }
-//
-//            tmp = new AVLTreeNode(el, tmp.getParent());
-//
-//            do
-//            {
-//                tmp = this.rebalance(tmp);
-//                tmp = tmp.getParent();
-//            }while(tmp.getParent() != null);
-//            tmp = this.rebalance(tmp);
-//
-//            return count;
         }
 
         // TODO inserire i metodi per i quattro tipi di rotazioni
@@ -851,7 +761,7 @@ public class AVLTree<E extends Comparable<E>> {
 //            x.setLeft(tmp.getRight());
 //            if(x.getRight() != null)
 //                x.setRight(x.getParent());
-            AVLTreeNode leftChild = x.getLeft();
+           /* AVLTreeNode leftChild = x.getLeft();
 
             x.setLeft(leftChild.getRight());
             leftChild.setRight(x);
@@ -859,15 +769,16 @@ public class AVLTree<E extends Comparable<E>> {
             x.updateHeight();
             leftChild.updateHeight();
 
-            return leftChild;
+            return leftChild;*/
+            return null;
 
         }
-        private AVLTreeNode leftRotate(AVLTreeNode x) {
+        private AVLTreeNode leftRotate(AVLTree<E> tree, AVLTreeNode node) {
 //            AVLTreeNode tmp =  x.getLeft();
 //            x.setLeft(tmp.getRight());
 //            if(x.getRight() != null)
 //                x.setRight(x.getParent());
-            AVLTreeNode rightChild = x.getRight();
+            /*AVLTreeNode rightChild = x.getRight();
 
             x.setRight(rightChild.getLeft());
             rightChild.setLeft(x);
@@ -875,7 +786,25 @@ public class AVLTree<E extends Comparable<E>> {
             x.updateHeight();
             rightChild.updateHeight();
 
-            return rightChild;
+            return rightChild;*/
+
+            AVLTreeNode toReturn = node.getRight();
+            node.setRight(toReturn.getLeft());
+            if (toReturn.getLeft() != null)
+                toReturn.getLeft().setParent(node.getParent());
+            toReturn.setParent(node.getParent());
+
+            if(node.getParent().equals(tree.getRoot()))
+                tree.setRoot(toReturn);
+            else if (node.equals(node.getParent().getLeft()))
+                node.getParent().setLeft(toReturn);
+            else
+                node.getParent().setLeft(toReturn);
+
+            toReturn.setLeft(node);
+            node.setParent(toReturn);
+
+            return toReturn;
         }
 
         private void scanningTree(AVLTreeNode node)
@@ -897,9 +826,10 @@ public class AVLTree<E extends Comparable<E>> {
             if (balanceFactor < -1) {
                 if (x.getLeft().getBalanceFactor() <=0) {    // Case 1
                     // Rotate right
+                    x.setLeft(rightRotate( x.getLeft()));
                 } else {                                // Case 2
                     // Rotate left-right
-                    x.setLeft(leftRotate(x.getLeft()));
+                    x.setLeft(leftRotate(AVLTree.this, x.getLeft()));
                 }
                 x = rightRotate(x);
             }
@@ -908,11 +838,12 @@ public class AVLTree<E extends Comparable<E>> {
             if (balanceFactor > 1) {
                 if (x.getRight().getBalanceFactor() >= 0) {    // Case 3
                     // Rotate left
+                    x.setLeft(leftRotate(AVLTree.this, x.getLeft()));
                 } else {                                 // Case 4
                     // Rotate right-left
                     x.setRight(rightRotate(x.getRight()));
                 }
-                x = leftRotate(x);
+                x = leftRotate(AVLTree.this, x);
             }
 
             return x;
