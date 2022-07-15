@@ -21,12 +21,10 @@ public class AVLTreeSort<E extends Comparable<E>>
         //creo un avl tree vuoto
         AVLTree<E> avlTree= new AVLTree<>();
         int compareCounter = 0;
-
         /*
         * inserisco nell'avl tutti gli elementi della lista
         * e accumulo il numero di confronti
         */
-
         for (E element: l)
             compareCounter += avlTree.insert(element);
 
