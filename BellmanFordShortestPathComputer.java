@@ -165,7 +165,8 @@ public class BellmanFordShortestPathComputer<L>
             //aggiungo l'arco che lo collega al precedente
             edgeList.add(graph.getEdge(targetNode.getPrevious(), targetNode));
             if (!targetNode.equals(this.getLastSource()))
-                //il targetNode diventa il suo previous e continuo finché non ne ha più
+                //se il targetNode non è uguale all'ultima sorgente, imposto i previous
+                //fin quando non ne ha più, altrimenti interrompo il ciclo
                 targetNode = targetNode.getPrevious();
             else
                 break;
