@@ -43,7 +43,7 @@ class FloydWarshallAllPairsShortestPathComputerTest {
         FloydWarshallAllPairsShortestPathComputer<String> a = new FloydWarshallAllPairsShortestPathComputer<>(
                 adj);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(IllegalStateException.class,
                 () -> a.computeShortestPaths());
 
     }
