@@ -87,18 +87,10 @@ public class BellmanFordShortestPathComputer<L>
             if(sourceNode.equals(next))
                 next.setFloatingPointDistance(0.0);
         }
-
-        //step2
         //scorro tutti i nodi del grafo
         for (int i = 0; i < this.getGraph().nodeCount() - 1; i++)
         {
-            /*
-             * per ogni arco del grafo creo due nodi:
-             * uno sorgente (node1), e uno di destinazione (node2),
-             * se la distanza di node2 è maggiore della distanza di node1,
-             * copio la distanza di node1 + il peso del suo arco
-             * nella distanza di node2
-             * */
+            //confronto gli archi e i loro pesi
             for (GraphEdge<L> newEdge : this.graph.getEdges())
             {
                 if (newEdge.getNode2().getFloatingPointDistance() > newEdge.getNode1().getFloatingPointDistance()
@@ -110,14 +102,7 @@ public class BellmanFordShortestPathComputer<L>
                 }
             }
         }
-        //step 3
-        /*
-             * per ogni arco del grafo creo due nodi:
-             * uno sorgente (node1), e uno di destinazione (node2),
-             * se la distanza di node1 + il peso del suo nuovo arco
-             * e' minore della distanza di node2,
-             * ci sarà un ciclo con peso negativo
-             * */
+       //controllo la presenza di un ciclo negativo
         for (GraphEdge<L> newEdge: this.getGraph().getEdges())
             if((newEdge.getNode1().getFloatingPointDistance() + newEdge.getWeight()) <
                     newEdge.getNode2().getFloatingPointDistance())
