@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-//TODO completare gli import necessari
 
 //ATTENZIONE: è vietato includere import a pacchetti che non siano della Java SE
 
@@ -120,16 +119,10 @@ public class BellmanFordShortestPathComputer<L>
              * ci sarà un ciclo con peso negativo
              * */
         for (GraphEdge<L> newEdge: this.getGraph().getEdges())
-            if((newEdge.getNode1().getFloatingPointDistance() + newEdge.getWeight()) < newEdge.getNode2().getFloatingPointDistance())
+            if((newEdge.getNode1().getFloatingPointDistance() + newEdge.getWeight()) <
+                    newEdge.getNode2().getFloatingPointDistance())
                 throw new IllegalStateException("Il grafo presenta un ciclo con peso negativo.");
 
-
-        /*for (GraphEdge<L> edge:  graph.getEdges())
-        {
-            if (edge.getWeight() < 0 && !edge.hasWeight())
-                throw new IllegalStateException("Ciclo con peso negativo.");
-        }*/
-        //il calcolo è avvenuto
         this.isComputed = true;
         this.lastSource = sourceNode;
     }
@@ -164,22 +157,22 @@ public class BellmanFordShortestPathComputer<L>
         if(!isComputed())
             throw new IllegalStateException("Il calcolo non e' stato eseguito.");
 
+        //la nuova lista di archi da salvare
         List<GraphEdge<L>> edgeList = new ArrayList<>();
 
 
         while (targetNode.getPrevious() != null) {
-            // aggiungo l'arco che lo collega al precedente
+            //aggiungo l'arco che lo collega al precedente
             edgeList.add(graph.getEdge(targetNode.getPrevious(), targetNode));
             if (!targetNode.equals(this.getLastSource()))
-                // il targetNode diventa il suo previous e continuo finché non ne ha più
+                //il targetNode diventa il suo previous e continuo finché non ne ha più
                 targetNode = targetNode.getPrevious();
             else
                 break;
         }
-//          Dato che il target si trova alla fine e inizio a scorrere da li,
-//          faccio il reverse dell'array per avere gli archi ordinati dal primo all'ultimo
+          //dato che il target si trova alla fine e inizio a scorrere da esso,
+          //faccio il reverse dell'array per avere gli archi ordinati dal primo all'ultimo
         Collections.reverse(edgeList);
         return edgeList;
     }
-    // TODO inserire eventuali metodi privati per l'implementazione
 }
