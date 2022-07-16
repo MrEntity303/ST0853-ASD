@@ -1,0 +1,17 @@
+# Compilare questo file prima di inviare il progetto
+# Componenti del gruppo in ordine alfabetico per cognome:
+
+# Componente 1
+NOME: Patryk Sebastian
+COGNOME: Bialowas
+MATRICOLA: 113959
+EMAIL UNICAM: patryk.bialowas@studenti.unicam.it
+ANNO DI ISCRIZIONE AL PRIMO ANNO: 2020/2021
+
+# Componente 2 (opzionale)
+NOME: Carmine
+COGNOME: Marchesani
+MATRICOLA: 113916
+EMAIL UNICAM: carmine.marchesani@studenti.unicam.it
+ANNO DI ISCRIZIONE AL PRIMO ANNO: 2020/2021
+
