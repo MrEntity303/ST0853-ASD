@@ -1,15 +1,15 @@
 # ST0853-ASD
 
-##Algorithms and Data Structures Project
+# Algorithms and Data Structures Project
 
-#Implementation of algorithms:
+## Implementation of algorithms:
 * Bellman-Ford
 * Floyd-Warshall
 * Counting Sort
 * AVL Tree Sort
 * Heap Sort
 
-#Implementation of Data Structures:
+## Implementation of Data Structures:
 * AVL Tree
 * Adjacency Matrix
 * Graph
